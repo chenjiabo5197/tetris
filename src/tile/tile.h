@@ -32,4 +32,7 @@ public:
 
     // 设置tile坐标
     bool set_coordinate(const int& x, const int& y);
+
+    // 设置tile在下降
+    bool tile_down();
 };

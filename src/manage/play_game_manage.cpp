@@ -19,6 +19,8 @@ extern std::pair<int, int> tile_offset;
 // tile_board的第一层中间，用于新tile出现的定位
 extern int tile_board_middle;
 
+ShapeBase* temp = nullptr;
+
 PlayGameManage::PlayGameManage(const Config& config)
 {
     std::string temp;
@@ -75,7 +77,7 @@ void PlayGameManage::init()
     // Tile* temp = new Tile(TILE_ORANGE);
     // temp->set_coordinate(0, 0);
     // m_tile_vector.push_back(temp);
-    ShapeBase* temp = new ShapeL(TILE_ORANGE);
+    temp = new ShapeL(TILE_ORANGE);
     auto temp_vector = temp->get_tiles_info();
     m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
     // TODO 为什么下面的会出core
@@ -91,6 +93,7 @@ void PlayGameManage::startRender()
     m_tile_board->render();
     for (std::vector<Tile*>::iterator it=m_tile_vector.begin(); it < m_tile_vector.end(); it++) {
         (*it)->render();
+        temp->shape_down();
     }
 }
 

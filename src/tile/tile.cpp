@@ -59,3 +59,9 @@ bool Tile::set_coordinate(const int& x, const int& y)
     m_box.x = x + m_offset_x;
     m_box.y = y + m_offset_y;
 }
+
+bool Tile::tile_down()
+{
+    
+    m_box.y = m_box.y + 1;
+}
