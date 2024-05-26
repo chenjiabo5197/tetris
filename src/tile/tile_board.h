@@ -22,8 +22,8 @@ public:
     // 渲染函数
     void render();
 
-    // 获取tile_board左上角坐标，用于给tile的坐标设置偏移量
-    std::pair<int, int> get_left_top_coordinate();
+    // 获取tile_board区域信息
+    SDL_Rect get_left_top_coordinate();
 };
 
 

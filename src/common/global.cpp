@@ -14,7 +14,7 @@ SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
 
 int tile_length = -1;
 
-std::pair<int, int> tile_offset = std::make_pair(-1, -1);
+extern SDL_Rect tile_board_region = {-1, -1, -1, -1};
 
 int tile_board_middle = -1;
 

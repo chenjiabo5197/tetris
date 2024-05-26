@@ -10,8 +10,8 @@ extern SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
 // tile边长
 extern int tile_length;
 
-// 每个tile1的偏移量
-extern std::pair<int, int> tile_offset;
+// tileboard 区域
+extern SDL_Rect tile_board_region;
 
 Tile::Tile(const tile_sprites& type)
 {
@@ -23,8 +23,8 @@ Tile::Tile(const tile_sprites& type)
     //Get the tile type
     m_type = type;
 
-    m_offset_x = tile_offset.first;
-    m_offset_y = tile_offset.second;
+    m_offset_x = tile_board_region.x;
+    m_offset_y = tile_board_region.y;
 
     INFOLOG("Tile construct success||m_box.w={}||m_box.h={}||m_offset_x={}||m_offset_y={}", m_box.w, m_box.h, m_offset_x, m_offset_y);
 }
@@ -62,6 +62,27 @@ bool Tile::set_coordinate(const int& x, const int& y)
 
 bool Tile::tile_down()
 {
-    
+    if (m_box.y+tile_length >= tile_board_region.y+tile_board_region.h)
+    {
+        return false;
+    }
     m_box.y = m_box.y + 1;
+}
+
+bool Tile::tile_left()
+{
+    if (m_box.x <= tile_board_region.x)
+    {
+        return false;
+    }
+    m_box.x = m_box.x - tile_length;
+}
+
+bool Tile::tile_right()
+{
+    if (m_box.x+tile_length >= tile_board_region.x+tile_board_region.w)
+    {
+        return false;
+    }
+    m_box.x = m_box.x + tile_length;
 }

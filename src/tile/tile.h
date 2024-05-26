@@ -35,4 +35,10 @@ public:
 
     // 设置tile在下降
     bool tile_down();
+
+    // tile向左移动一个tile距离
+    bool tile_left();
+
+    // tile向右移动一个tile距离
+    bool tile_right();
 };

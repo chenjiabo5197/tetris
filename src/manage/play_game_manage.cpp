@@ -13,13 +13,13 @@ extern SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
 // tile边长
 extern int tile_length;
 
-// 每个tile1的偏移量
-extern std::pair<int, int> tile_offset;
+// tileboard 区域
+extern SDL_Rect tile_board_region;
 
 // tile_board的第一层中间，用于新tile出现的定位
 extern int tile_board_middle;
 
-ShapeBase* temp = nullptr;
+ShapeBase* shape_base = nullptr;
 
 PlayGameManage::PlayGameManage(const Config& config)
 {
@@ -73,15 +73,15 @@ void PlayGameManage::init()
         g_tile_clips[i].h = tile_length;
     }
     INFOLOG("init||init success");
-    tile_offset = m_tile_board->get_left_top_coordinate();
+    tile_board_region = m_tile_board->get_left_top_coordinate();
     // Tile* temp = new Tile(TILE_ORANGE);
     // temp->set_coordinate(0, 0);
     // m_tile_vector.push_back(temp);
-    temp = new ShapeL(TILE_ORANGE);
-    auto temp_vector = temp->get_tiles_info();
+    shape_base = new ShapeL(TILE_ORANGE);
+    auto temp_vector = shape_base->get_tiles_info();
     m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
     // TODO 为什么下面的会出core
-    // m_tile_vector.insert(m_tile_vector.end(), temp->get_tiles_info().begin(), temp->get_tiles_info().end());
+    // m_tile_vector.insert(m_tile_vector.end(), shape_base->get_tiles_info().begin(), shape_base->get_tiles_info().end());
 }
 
 void PlayGameManage::startRender()
@@ -93,7 +93,7 @@ void PlayGameManage::startRender()
     m_tile_board->render();
     for (std::vector<Tile*>::iterator it=m_tile_vector.begin(); it < m_tile_vector.end(); it++) {
         (*it)->render();
-        temp->shape_down();
+        shape_base->shape_down(0.3);
     }
 }
 
@@ -104,6 +104,46 @@ bool PlayGameManage::handleMouseClick(SDL_Event* event)
 
 void PlayGameManage::handleEvents(SDL_Event* event)
 {
+    // switch(event->key.keysym.sym)
+    // {
+    //     // 识别的是键盘的上下左右四个方向按键
+    //     case SDLK_UP:   
+    //         shape_base->shape_change();
+    //         break;
+    //     case SDLK_DOWN:
+    //         shape_base->shape_down(100);
+    //         break;
+    //     case SDLK_LEFT:
+    //         shape_base->shape_left();
+    //         break;
+    //     case SDLK_RIGHT:
+    //         shape_base->shape_right();
+    //         break;
+    //     default:
+    //         ERRORLOG("handleEvents||unndefined key");
+    //         break;
+    // }
+    const Uint8* currentKeyStates = SDL_GetKeyboardState( nullptr );
+    if( currentKeyStates[ SDL_SCANCODE_UP ] )
+    {
+        shape_base->shape_change();
+    }
+    else if( currentKeyStates[ SDL_SCANCODE_DOWN ] )
+    {
+        shape_base->shape_down(100);
+    }
+    else if( currentKeyStates[ SDL_SCANCODE_LEFT ] )
+    {
+        shape_base->shape_left();
+    }
+    else if( currentKeyStates[ SDL_SCANCODE_RIGHT ] )
+    {
+        shape_base->shape_right();
+    }
+    else
+    {
+        ERRORLOG("handleEvents||unndefined key");
+    }
     // 遍历渲染当前按键的状态
     for (int i = 0; i < m_array_length; i++)
     {

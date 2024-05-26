@@ -29,11 +29,8 @@ void TileBoard::render()
     SDL_RenderFillRect(g_main_window->getRenderer(), &tile_board);
 }
 
-std::pair<int, int> TileBoard::get_left_top_coordinate()
+SDL_Rect TileBoard::get_left_top_coordinate()
 {
-    int left_top_x = m_center_x-m_width/2;
-    int left_top_y = m_center_y-m_height/2;
-    INFOLOG("get_left_top_coordinate||left_top_x={}||left_top_y={}", left_top_x, left_top_y);
-    std::pair<int, int>temp(left_top_x, left_top_y);
-    return temp;
+    SDL_Rect tile_board = {m_center_x-m_width/2, m_center_y-m_height/2, m_width, m_height};
+    return tile_board;
 }
