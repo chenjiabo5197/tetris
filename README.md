@@ -1,4 +1,4 @@
-# gobang
+# tetris
 
 #### 介绍
 用c++写的俄罗斯方块，基于SDL2图像库、spdlog日志库，使用CMakeLists.txt方式编译代码
@@ -39,7 +39,7 @@
 4.  新建 Pull Request
 
 #### 疑问
-
+1.  play_game_manage.cpp中m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());可以正常运行，m_tile_vector.insert(m_tile_vector.end(), temp->get_tiles_info().begin(), temp->get_tiles_info().end());会出core，难道temp->get_tiles_info()两次获取的vector有区别？
 
 #### 特技
 

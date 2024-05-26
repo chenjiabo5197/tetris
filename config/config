@@ -13,7 +13,7 @@ g_main_window_screen_width=600
 g_main_window_screen_height=900
 
 # 俄罗斯方块落子区域，长和宽是指此方向同时放下tiles的数量
-tile_board_width=10
+tile_board_width=11
 tile_board_height=25
 tile_board_center_x = 200
 tile_board_center_y = 450

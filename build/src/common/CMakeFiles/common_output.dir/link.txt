@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcommon_output.a CMakeFiles/common_output.dir/config.cpp.o CMakeFiles/common_output.dir/global.cpp.o CMakeFiles/common_output.dir/my_utils.cpp.o
-/usr/bin/ranlib libcommon_output.a

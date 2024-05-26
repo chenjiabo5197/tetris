@@ -10,8 +10,14 @@ extern SDLTexture* g_tile_texture;
 // tile每个区域
 extern SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
 
-// 是否机器人先手
-bool is_machine_first = false;
+// tile边长
+extern int tile_length;
+
+// 每个tile1的偏移量
+extern std::pair<int, int> tile_offset;
+
+// tile_board的第一层中间，用于新tile出现的定位
+extern int tile_board_middle;
 
 PlayGameManage::PlayGameManage(const Config& config)
 {
@@ -24,10 +30,11 @@ PlayGameManage::PlayGameManage(const Config& config)
     m_is_reset_single_player_chess_data_board = true;
     m_is_reset_two_players_chess_data_board = true;
     m_tiles_path = config.Read("tiles_resource_path", temp);
-    m_tile_length = config.Read("tile_side_length", 0);
+    tile_length = config.Read("tile_side_length", 0);
     m_tile_board_col_nums = config.Read("tile_board_width", 0);
     m_tile_board_row_nums = config.Read("tile_board_height", 0);
-    m_tile_board = new TileBoard(config, m_tile_board_col_nums*m_tile_length, m_tile_board_row_nums*m_tile_length);
+    tile_board_middle = m_tile_board_col_nums / 2 + 1;
+    m_tile_board = new TileBoard(config, m_tile_board_col_nums*tile_length, m_tile_board_row_nums*tile_length);
     DEBUGLOG("PlayGameManage construct success||button_interval={}||buttons_x={}||buttons_y={}||array_length={}", 
     m_button_interval, m_buttons_x, m_buttons_y, m_array_length);
 }
@@ -58,18 +65,21 @@ void PlayGameManage::init()
     DEBUGLOG("init||load g_tile_texture resource success");
     for (int i = 0; i < TOTAL_TILE_SPRITES; i++)
     {
-        g_tile_clips[i].x = m_tile_length * i;
+        g_tile_clips[i].x = tile_length * i;
         g_tile_clips[i].y = 0;
-        g_tile_clips[i].w = m_tile_length;
-        g_tile_clips[i].h = m_tile_length;
+        g_tile_clips[i].w = tile_length;
+        g_tile_clips[i].h = tile_length;
     }
     INFOLOG("init||init success");
-    Tile* temp = new Tile(m_array_length, TILE_RED, m_tile_board->get_left_top_coordinate());
-    temp->set_coordinate(0, 0);
-    m_tile_vector.push_back(temp);
-    Tile* temp2 = new Tile(m_array_length, TILE_BLUE, m_tile_board->get_left_top_coordinate());
-    temp2->set_coordinate(34, 0);
-    m_tile_vector.push_back(temp2);
+    tile_offset = m_tile_board->get_left_top_coordinate();
+    // Tile* temp = new Tile(TILE_ORANGE);
+    // temp->set_coordinate(0, 0);
+    // m_tile_vector.push_back(temp);
+    ShapeBase* temp = new ShapeL(TILE_ORANGE);
+    auto temp_vector = temp->get_tiles_info();
+    m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
+    // TODO 为什么下面的会出core
+    // m_tile_vector.insert(m_tile_vector.end(), temp->get_tiles_info().begin(), temp->get_tiles_info().end());
 }
 
 void PlayGameManage::startRender()

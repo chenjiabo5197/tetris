@@ -1,2 +1,0 @@
-/usr/bin/ar qc libmanage_output.a CMakeFiles/manage_output.dir/main_menu_manage.cpp.o CMakeFiles/manage_output.dir/play_game_manage.cpp.o CMakeFiles/manage_output.dir/settlement_manage.cpp.o CMakeFiles/manage_output.dir/top_manage.cpp.o
-/usr/bin/ranlib libmanage_output.a

@@ -7,18 +7,24 @@ extern SDLTexture* g_tile_texture;
 
 extern SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
 
-Tile::Tile(const int& length, const tile_sprites& type, const std::pair<int, int>& offset)
+// tile边长
+extern int tile_length;
+
+// 每个tile1的偏移量
+extern std::pair<int, int> tile_offset;
+
+Tile::Tile(const tile_sprites& type)
 {
     //Get the offsets
     m_box.x = -1;
     m_box.y = -1;
-    m_box.w = length;
-    m_box.h = length;
+    m_box.w = tile_length;
+    m_box.h = tile_length;
     //Get the tile type
     m_type = type;
 
-    m_offset_x = offset.first;
-    m_offset_y = offset.second;
+    m_offset_x = tile_offset.first;
+    m_offset_y = tile_offset.second;
 
     INFOLOG("Tile construct success||m_box.w={}||m_box.h={}||m_offset_x={}||m_offset_y={}", m_box.w, m_box.h, m_offset_x, m_offset_y);
 }

@@ -23,4 +23,5 @@ include_directories(
 target_link_libraries(
     ${PROJECT_NAME}
     common_output
+    tile_output
 )

@@ -29,3 +29,12 @@ extern SDLTexture* g_tile_texture;
 
 // tile每个区域
 extern SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
+
+// tile边长
+extern int tile_length;
+
+// 每个tile1的偏移量
+extern std::pair<int, int> tile_offset;
+
+// tile_board的第一层中间，用于新tile出现的定位
+extern int tile_board_middle;

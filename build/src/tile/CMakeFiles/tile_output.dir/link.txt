@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtile_output.a CMakeFiles/tile_output.dir/tile.cpp.o CMakeFiles/tile_output.dir/tile_board.cpp.o
-/usr/bin/ranlib libtile_output.a

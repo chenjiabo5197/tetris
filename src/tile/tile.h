@@ -3,7 +3,6 @@
 #include "SDL2/SDL.h"
 #include "global.h"
 #include "common.h"
-#include "config.h"
 #include "sdl_texture.h"
 
 class Tile
@@ -21,7 +20,7 @@ private:
 
 public:
     //Initializes position and type
-    Tile(const int& length, const tile_sprites& type, const std::pair<int, int>& offset);
+    Tile(const tile_sprites& type);
 
     //Get the tile type
     tile_sprites getType();

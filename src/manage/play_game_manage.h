@@ -17,6 +17,8 @@
 #include "config.h"
 #include "tile_board.h"
 #include "tile.h"
+#include "shape_base.h"
+#include "shape_l.h"
 
 class PlayGameManage
 {
@@ -43,9 +45,6 @@ private:
 
     // tile源图路径
     std::string m_tiles_path;
-
-    // tile 边长
-    int m_tile_length;
 
     // tile_board 尺寸
     int m_tile_board_row_nums;
