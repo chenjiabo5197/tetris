@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++11 -rdynamic CMakeFiles/tetris.dir/src/main.cpp.o -o tetris  src/manage/libmanage_output.a src/render/librender_output.a src/logger/liblogger_output.a src/common/libcommon_output.a src/tile/libtile_output.a -L/usr/lib/x86_64-linux-gnu  -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer 

@@ -1,0 +1,2 @@
+/usr/bin/ar qc librender_output.a CMakeFiles/render_output.dir/sdl_button.cpp.o CMakeFiles/render_output.dir/sdl_texture.cpp.o CMakeFiles/render_output.dir/sdl_timer.cpp.o CMakeFiles/render_output.dir/sdl_ttf.cpp.o CMakeFiles/render_output.dir/sdl_window.cpp.o
+/usr/bin/ranlib librender_output.a
