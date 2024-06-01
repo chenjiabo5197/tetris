@@ -15,7 +15,7 @@ public:
     ~ShapeBase();
     
     // 获取当前图形的tile信息
-    std::vector<Tile*> get_tiles_info();
+    std::vector<Tile*> get_tiles_info() const;
 
     // 同一图像变换形状
     void shape_change();
@@ -28,6 +28,9 @@ public:
 
     // 图形向右移动
     bool shape_right();
+
+    // 图像渲染
+    void render();
 };
 
 

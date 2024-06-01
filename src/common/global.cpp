@@ -12,9 +12,9 @@ SDLTexture* g_tile_texture = nullptr;
 
 SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
 
-int tile_length = -1;
+int g_tile_length = -1;
 
-extern SDL_Rect tile_board_region = {-1, -1, -1, -1};
+SDL_Rect g_tile_board_region = {-1, -1, -1, -1};
 
-int tile_board_middle = -1;
+int g_tile_board_middle = -1;
 

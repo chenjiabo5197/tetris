@@ -28,11 +28,6 @@ private:
 
     TileBoard* m_tile_board;
 
-    // 是否需要重置单人游戏数据板
-    bool m_is_reset_single_player_chess_data_board;
-    // 是否需要重置双人游戏数据板
-    bool m_is_reset_two_players_chess_data_board;
-
     // 按键的数组长度，渲染按键时使用
     int m_array_length;
 
@@ -52,6 +47,11 @@ private:
 
     // 存放当前要渲染的所有tile
     std::vector<Tile*> m_tile_vector;
+
+    // 判断当前图形是否可以下降、左移、右移
+    bool isCanDown(const ShapeBase& shape);
+    bool isCanLeft(const ShapeBase& shape);
+    bool isCanRight(const ShapeBase& shape);
 
 public:
     PlayGameManage(const Config& config);

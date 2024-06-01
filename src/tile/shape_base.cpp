@@ -9,7 +9,7 @@ ShapeBase::~ShapeBase()
 {
 }
 
-std::vector<Tile*> ShapeBase::get_tiles_info()
+std::vector<Tile*> ShapeBase::get_tiles_info() const
 {
     return m_tile_vector;
 }
@@ -21,17 +21,21 @@ void ShapeBase::shape_change()
 
 bool ShapeBase::shape_down(const float& down_rate)
 {
-    if (m_down_rate_sum < 1)
+    // if (m_down_rate_sum < 1)
+    // {
+    //     m_down_rate_sum += down_rate;
+    // }
+    // else if (m_down_rate_sum >= 1)
+    // {
+    //     m_down_rate_sum = 0;
+    //     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
+    //     {
+    //         (*it)->tile_down();
+    //     }
+    // }
+    for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     {
-        m_down_rate_sum += down_rate;
-    }
-    else if (m_down_rate_sum >= 1)
-    {
-        m_down_rate_sum = 0;
-        for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
-        {
-            (*it)->tile_down();
-        }
+        (*it)->tile_down();
     }
 }
 
@@ -48,5 +52,13 @@ bool ShapeBase::shape_right()
     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     {
         (*it)->tile_right();
+    }
+}
+
+void ShapeBase::render()
+{
+    for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
+    {
+        (*it)->render();
     }
 }
