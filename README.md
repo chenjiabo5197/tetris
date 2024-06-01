@@ -39,7 +39,7 @@
 4.  新建 Pull Request
 
 #### 疑问
-1.  play_game_manage.cpp中m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());可以正常运行，m_tile_vector.insert(m_tile_vector.end(), temp->get_tiles_info().begin(), temp->get_tiles_info().end());会出core，难道temp->get_tiles_info()两次获取的vector有区别？
+1.  play_game_manage.cpp中m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());可以正常运行，m_tile_vector.insert(m_tile_vector.end(), temp->getTilesInfo().begin(), temp->getTilesInfo().end());会出core，难道temp->getTilesInfo()两次获取的vector有区别？
 
 #### 特技
 

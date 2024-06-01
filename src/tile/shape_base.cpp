@@ -3,23 +3,25 @@
 ShapeBase::ShapeBase(/* args */)
 {
     m_down_rate_sum = 0;
+    INFOLOG("ShapeBase construct success");
 }
 
 ShapeBase::~ShapeBase()
 {
+    INFOLOG("ShapeBase ~ShapeBase success");
 }
 
-std::vector<Tile*> ShapeBase::get_tiles_info() const
+std::vector<Tile*> ShapeBase::getTilesInfo() const
 {
     return m_tile_vector;
 }
 
-void ShapeBase::shape_change()
+void ShapeBase::shapeChange()
 {
 
 }
 
-bool ShapeBase::shape_down(const float& down_rate)
+bool ShapeBase::shapeDown(const float& down_rate)
 {
     // if (m_down_rate_sum < 1)
     // {
@@ -30,28 +32,28 @@ bool ShapeBase::shape_down(const float& down_rate)
     //     m_down_rate_sum = 0;
     //     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     //     {
-    //         (*it)->tile_down();
+    //         (*it)->tileDown();
     //     }
     // }
     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     {
-        (*it)->tile_down();
+        (*it)->tileDown();
     }
 }
 
-bool ShapeBase::shape_left()
+bool ShapeBase::shapeLeft()
 {
     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     {
-        (*it)->tile_left();
+        (*it)->tileLeft();
     }
 }
 
-bool ShapeBase::shape_right()
+bool ShapeBase::shapeRight()
 {
     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     {
-        (*it)->tile_right();
+        (*it)->tileRight();
     }
 }
 

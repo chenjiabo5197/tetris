@@ -29,7 +29,7 @@ void TileBoard::render()
     SDL_RenderFillRect(g_main_window->getRenderer(), &tile_board);
 }
 
-SDL_Rect TileBoard::get_left_top_coordinate()
+SDL_Rect TileBoard::getLeftTopCoordinate()
 {
     SDL_Rect tile_board = {m_center_x-m_width/2, m_center_y-m_height/2, m_width, m_height};
     return tile_board;

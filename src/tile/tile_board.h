@@ -23,7 +23,7 @@ public:
     void render();
 
     // 获取tile_board区域信息
-    SDL_Rect get_left_top_coordinate();
+    SDL_Rect getLeftTopCoordinate();
 };
 
 

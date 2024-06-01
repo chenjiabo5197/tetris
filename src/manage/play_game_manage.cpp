@@ -35,6 +35,8 @@ PlayGameManage::PlayGameManage(const Config& config)
     m_tile_board_row_nums = config.Read("tile_board_height", 0);
     g_tile_board_middle = m_tile_board_col_nums / 2 + 1;
     m_tile_board = new TileBoard(config, m_tile_board_col_nums*g_tile_length, m_tile_board_row_nums*g_tile_length);
+    m_last_shape_index = -1;
+    m_last_tile_sprite_index = -1;
     DEBUGLOG("PlayGameManage construct success||button_interval={}||buttons_x={}||buttons_y={}||array_length={}", 
     m_button_interval, m_buttons_x, m_buttons_y, m_array_length);
 }
@@ -71,15 +73,17 @@ void PlayGameManage::init()
         g_tile_clips[i].h = g_tile_length;
     }
     INFOLOG("init||init success");
-    g_tile_board_region = m_tile_board->get_left_top_coordinate();
+    g_tile_board_region = m_tile_board->getLeftTopCoordinate();
+    auto rand_tile_sprite = nextTileSprite();
+    shape_base = nextShape(rand_tile_sprite);
     // Tile* temp = new Tile(TILE_ORANGE);
     // temp->set_coordinate(0, 0);
     // m_tile_vector.push_back(temp);
-    shape_base = new ShapeL(TILE_ORANGE);
-    // auto temp_vector = shape_base->get_tiles_info();
+    // shape_base = new ShapeI(TILE_ORANGE);
+    // auto temp_vector = shape_base->getTilesInfo();
     // m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
     // TODO 为什么下面的会出core
-    // m_tile_vector.insert(m_tile_vector.end(), shape_base->get_tiles_info().begin(), shape_base->get_tiles_info().end());
+    // m_tile_vector.insert(m_tile_vector.end(), shape_base->getTilesInfo().begin(), shape_base->getTilesInfo().end());
 }
 
 void PlayGameManage::startRender()
@@ -95,13 +99,14 @@ void PlayGameManage::startRender()
     shape_base->render();
     if (isCanDown(*shape_base))
     {
-        shape_base->shape_down(0.3);
+        shape_base->shapeDown(0.3);
     }
     else
     {
-        auto temp_vector = shape_base->get_tiles_info();
+        auto temp_vector = shape_base->getTilesInfo();
         m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
-        shape_base = new ShapeL(TILE_BLUE);
+        auto rand_tile_sprite = nextTileSprite();
+        shape_base = nextShape(rand_tile_sprite);
     }
 }
 
@@ -115,27 +120,27 @@ void PlayGameManage::handleEvents(SDL_Event* event)
     const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
     if(currentKeyStates[SDL_SCANCODE_UP])
     {
-        shape_base->shape_change();
+        shape_base->shapeChange();
     }
     else if(currentKeyStates[SDL_SCANCODE_DOWN])
     {
         if (isCanDown(*shape_base))
         {
-            shape_base->shape_down(100);
+            shape_base->shapeDown(100);
         }
     }
     else if(currentKeyStates[SDL_SCANCODE_LEFT])
     {
         if (isCanLeft(*shape_base))
         {
-            shape_base->shape_left();
+            shape_base->shapeLeft();
         }
     }
     else if(currentKeyStates[SDL_SCANCODE_RIGHT])
     {
         if (isCanRight(*shape_base))
         {
-            shape_base->shape_right();
+            shape_base->shapeRight();
         }
     }
     // 遍历渲染当前按键的状态
@@ -156,7 +161,7 @@ void PlayGameManage::handleEvents(SDL_Event* event)
 
 bool PlayGameManage::isCanDown(const ShapeBase& shape)
 {
-    auto tiles = shape.get_tiles_info();
+    auto tiles = shape.getTilesInfo();
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
         // 判断当前tile是否越过tile_board底线
@@ -180,7 +185,7 @@ bool PlayGameManage::isCanDown(const ShapeBase& shape)
 
 bool PlayGameManage::isCanLeft(const ShapeBase& shape)
 {
-    auto tiles = shape.get_tiles_info();
+    auto tiles = shape.getTilesInfo();
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
         // 判断当前tile是否越过tile_board左侧边界
@@ -206,7 +211,7 @@ bool PlayGameManage::isCanLeft(const ShapeBase& shape)
 
 bool PlayGameManage::isCanRight(const ShapeBase& shape)
 {
-    auto tiles = shape.get_tiles_info();
+    auto tiles = shape.getTilesInfo();
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
         // 判断当前tile是否越过tile_board左侧边界
@@ -228,5 +233,89 @@ bool PlayGameManage::isCanRight(const ShapeBase& shape)
         }
     }
     return true;
+}
+
+
+ShapeBase* PlayGameManage::nextShape(const tile_sprites& type)
+{
+    srand((unsigned) time(nullptr));
+    int rand_index = m_last_shape_index;
+    do
+    {
+        rand_index = rand() % 7;
+        DEBUGLOG("nextShape||rand_index={}", rand_index);
+    } while (rand_index == m_last_shape_index);
+    m_last_shape_index = rand_index;
+    ShapeBase* rand_shape = nullptr;
+    switch (rand_index)
+    {
+    case 0:
+        rand_shape = new ShapeI(type);
+        break;
+    case 1:
+        rand_shape = new ShapeJ(type);
+        break;
+    case 2:
+        rand_shape = new ShapeL(type);
+        break;
+    case 3:
+        rand_shape = new ShapeO(type);
+        break;
+    case 4:
+        rand_shape = new ShapeS(type);
+        break;
+    case 5:
+        rand_shape = new ShapeT(type);
+        break;
+    case 6:
+        rand_shape = new ShapeZ(type);
+        break;
+    default:
+        ERRORLOG("nextShape||unknown shape index||rand_index={}", rand_index);
+        break;
+    }
+    return rand_shape;
+}
+
+
+tile_sprites PlayGameManage::nextTileSprite()
+{
+    srand((unsigned) time(nullptr));
+    int rand_index = m_last_tile_sprite_index;
+    do
+    {
+        rand_index = rand() % 7;
+        DEBUGLOG("nextTileSprite||rand_index={}", rand_index);
+    } while (rand_index == m_last_tile_sprite_index);
+    m_last_tile_sprite_index = rand_index;
+    tile_sprites rand_tile_sprite = TILE_DEFAULT;
+    switch (rand_index)
+    {
+    case 0:
+        rand_tile_sprite = TILE_BLUE;
+        break;
+    case 1:
+        rand_tile_sprite = TILE_GREEN;
+        break;
+    case 2:
+        rand_tile_sprite = TILE_ORANGE;
+        break;
+    case 3:
+        rand_tile_sprite = TILE_PURPLE;
+        break;
+    case 4:
+        rand_tile_sprite = TILE_RED;
+        break;
+    case 5:
+        rand_tile_sprite = TILE_SKYBLUE;
+        break;
+    case 6:
+        rand_tile_sprite = TILE_YELLOW;
+        break;
+    default:
+        ERRORLOG("nextTileSprite||unknown tile_sprite index||rand_index={}", rand_index);
+        break;
+    }
+    return rand_tile_sprite;
 }
 

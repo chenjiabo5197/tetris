@@ -21,6 +21,7 @@ private:
 public:
     //Initializes position and type
     Tile(const tile_sprites& type);
+    ~Tile();
 
     //Get the tile type
     tile_sprites getType();
@@ -34,11 +35,11 @@ public:
     bool set_coordinate(const int& x, const int& y);
 
     // 设置tile在下降
-    bool tile_down();
+    bool tileDown();
 
     // tile向左移动一个tile距离
-    bool tile_left();
+    bool tileLeft();
 
     // tile向右移动一个tile距离
-    bool tile_right();
+    bool tileRight();
 };

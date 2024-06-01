@@ -29,6 +29,11 @@ Tile::Tile(const tile_sprites& type)
     INFOLOG("Tile construct success||m_box.w={}||m_box.h={}||m_offset_x={}||m_offset_y={}", m_box.w, m_box.h, m_offset_x, m_offset_y);
 }
 
+Tile::~Tile()
+{
+    INFOLOG("Tile ~Tile success");
+}
+
 tile_sprites Tile::getType()
 {
     return m_type;
@@ -60,17 +65,17 @@ bool Tile::set_coordinate(const int& x, const int& y)
     m_box.y = y + m_offset_y;
 }
 
-bool Tile::tile_down()
+bool Tile::tileDown()
 {
     m_box.y = m_box.y + 1;
 }
 
-bool Tile::tile_left()
+bool Tile::tileLeft()
 {
     m_box.x = m_box.x - g_tile_length;
 }
 
-bool Tile::tile_right()
+bool Tile::tileRight()
 {
     m_box.x = m_box.x + g_tile_length;
 }

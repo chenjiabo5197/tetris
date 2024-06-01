@@ -18,7 +18,13 @@
 #include "tile_board.h"
 #include "tile.h"
 #include "shape_base.h"
+#include "shape_i.h"
+#include "shape_j.h"
 #include "shape_l.h"
+#include "shape_o.h"
+#include "shape_s.h"
+#include "shape_t.h"
+#include "shape_z.h"
 
 class PlayGameManage
 {
@@ -48,10 +54,21 @@ private:
     // 存放当前要渲染的所有tile
     std::vector<Tile*> m_tile_vector;
 
+    // 上次随机图形的索引
+    short m_last_shape_index;
+    // 上次随机颜色的索引
+    short m_last_tile_sprite_index;
+
     // 判断当前图形是否可以下降、左移、右移
     bool isCanDown(const ShapeBase& shape);
     bool isCanLeft(const ShapeBase& shape);
     bool isCanRight(const ShapeBase& shape);
+
+    // 获取下一个出现的图形
+    ShapeBase* nextShape(const tile_sprites& type);
+
+    // 下一个出现的图形颜色
+    tile_sprites nextTileSprite();
 
 public:
     PlayGameManage(const Config& config);

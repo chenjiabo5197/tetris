@@ -15,19 +15,19 @@ public:
     ~ShapeBase();
     
     // 获取当前图形的tile信息
-    std::vector<Tile*> get_tiles_info() const;
+    std::vector<Tile*> getTilesInfo() const;
 
     // 同一图像变换形状
-    void shape_change();
+    void shapeChange();
 
     // 图形下落
-    bool shape_down(const float& down_rate);
+    bool shapeDown(const float& down_rate);
 
     // 图形向左移动
-    bool shape_left();
+    bool shapeLeft();
 
     // 图形向右移动
-    bool shape_right();
+    bool shapeRight();
 
     // 图像渲染
     void render();
