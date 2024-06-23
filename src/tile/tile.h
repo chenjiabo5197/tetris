@@ -31,8 +31,11 @@ public:
 
     void render();
 
-    // 设置tile坐标
-    bool set_coordinate(const int& x, const int& y);
+    // 设置tile相对坐标
+    void setRelativeCoordinate(const int& x, const int& y);
+
+    // 设置tile绝对坐标
+    void setAbsoluteCoordinate(const int& x, const int& y);
 
     // 设置tile在下降
     bool tileDown();

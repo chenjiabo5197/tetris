@@ -33,7 +33,7 @@ PlayGameManage::PlayGameManage(const Config& config)
     g_tile_length = config.Read("tile_side_length", 0);
     m_tile_board_col_nums = config.Read("tile_board_width", 0);
     m_tile_board_row_nums = config.Read("tile_board_height", 0);
-    g_tile_board_middle = m_tile_board_col_nums / 2 + 1;
+    g_tile_board_middle = m_tile_board_col_nums / 2;
     m_tile_board = new TileBoard(config, m_tile_board_col_nums*g_tile_length, m_tile_board_row_nums*g_tile_length);
     m_last_shape_index = -1;
     m_last_tile_sprite_index = -1;
@@ -77,7 +77,7 @@ void PlayGameManage::init()
     auto rand_tile_sprite = nextTileSprite();
     shape_base = nextShape(rand_tile_sprite);
     // Tile* temp = new Tile(TILE_ORANGE);
-    // temp->set_coordinate(0, 0);
+    // temp->setRelativeCoordinate(0, 0);
     // m_tile_vector.push_back(temp);
     // shape_base = new ShapeI(TILE_ORANGE);
     // auto temp_vector = shape_base->getTilesInfo();
@@ -123,7 +123,11 @@ void PlayGameManage::handleEvents(SDL_Event* event)
     const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
     if(currentKeyStates[SDL_SCANCODE_UP])
     {
-        shape_base->shapeChange();
+        if (isShapeCanChange(*shape_base))
+        {
+            shape_base->shapeChange();
+            shape_base->updateCurrentShape();
+        }
     }
     else if(currentKeyStates[SDL_SCANCODE_DOWN])
     {
@@ -224,7 +228,7 @@ bool PlayGameManage::isCanRight(const ShapeBase& shape)
     auto tiles = shape.getTilesInfo();
     for (auto it = tiles.begin(); it != tiles.end(); it++)
     {
-        // 判断当前tile是否越过tile_board左侧边界
+        // 判断当前tile是否越过tile_board右侧边界
         if ((*it)->getBox().x+g_tile_length >= g_tile_board_region.x+g_tile_board_region.w)
         {
             DEBUGLOG("isCanRight||tile_board right line");
@@ -245,6 +249,47 @@ bool PlayGameManage::isCanRight(const ShapeBase& shape)
     return true;
 }
 
+bool PlayGameManage::isShapeCanChange(ShapeBase& shape)
+{
+    auto tiles = shape.getNextTilesInfo();
+    for (auto it = tiles.begin(); it != tiles.end(); it++)
+    {
+        // 判断当前tile是否越过tile_board底线
+        if ((*it)->getBox().y+g_tile_length > g_tile_board_region.y+g_tile_board_region.h)
+        {
+            DEBUGLOG("isShapeCanChange||tile_board down line");
+            return false;
+        }
+        // 判断当前tile是否越过tile_board左侧边界
+        if ((*it)->getBox().x < g_tile_board_region.x)
+        {
+            DEBUGLOG("isShapeCanChange||tile_board left line");
+            return false;
+        }
+        // 判断当前tile是否越过tile_board右侧边界
+        if ((*it)->getBox().x+g_tile_length > g_tile_board_region.x+g_tile_board_region.w)
+        {
+            DEBUGLOG("isShapeCanChange||tile_board right line");
+            return false;
+        }
+        // 判断目前vector中tile与该tile有部分重叠区域
+        for (auto it2 = m_tile_vector.begin(); it2 != m_tile_vector.end(); it2++)
+        {
+            if((((*it)->getBox().y + g_tile_length > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y ) || 
+            ((*it)->getBox().y > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y + g_tile_length) ||
+            ((*it)->getBox().y == (*it2)->getBox().y)) && 
+            (((*it)->getBox().x + g_tile_length > (*it2)->getBox().x && (*it)->getBox().x < (*it2)->getBox().x ) || 
+            ((*it)->getBox().x > (*it2)->getBox().x && (*it)->getBox().x < (*it2)->getBox().x + g_tile_length) ||
+            ((*it)->getBox().x == (*it2)->getBox().x)))
+            {
+                DEBUGLOG("isShapeCanChange||tile stop change");
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 
 ShapeBase* PlayGameManage::nextShape(const tile_sprites& type)
 {
@@ -252,34 +297,35 @@ ShapeBase* PlayGameManage::nextShape(const tile_sprites& type)
     int rand_index = m_last_shape_index;
     do
     {
-        rand_index = rand() % 7;
+        // rand_index = rand() % 7;
+        rand_index = 0;
         DEBUGLOG("nextShape||rand_index={}", rand_index);
     } while (rand_index == m_last_shape_index);
-    m_last_shape_index = rand_index;
+    // m_last_shape_index = rand_index;
     ShapeBase* rand_shape = nullptr;
     switch (rand_index)
     {
     case 0:
         rand_shape = new ShapeI(type);
         break;
-    case 1:
-        rand_shape = new ShapeJ(type);
-        break;
-    case 2:
-        rand_shape = new ShapeL(type);
-        break;
-    case 3:
-        rand_shape = new ShapeO(type);
-        break;
-    case 4:
-        rand_shape = new ShapeS(type);
-        break;
-    case 5:
-        rand_shape = new ShapeT(type);
-        break;
-    case 6:
-        rand_shape = new ShapeZ(type);
-        break;
+    // case 1:
+    //     rand_shape = new ShapeJ(type);
+    //     break;
+    // case 2:
+    //     rand_shape = new ShapeL(type);
+    //     break;
+    // case 3:
+    //     rand_shape = new ShapeO(type);
+    //     break;
+    // case 4:
+    //     rand_shape = new ShapeS(type);
+    //     break;
+    // case 5:
+    //     rand_shape = new ShapeT(type);
+    //     break;
+    // case 6:
+    //     rand_shape = new ShapeZ(type);
+    //     break;
     default:
         ERRORLOG("nextShape||unknown shape index||rand_index={}", rand_index);
         break;
@@ -328,4 +374,5 @@ tile_sprites PlayGameManage::nextTileSprite()
     }
     return rand_tile_sprite;
 }
+
 

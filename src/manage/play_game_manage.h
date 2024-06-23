@@ -64,6 +64,9 @@ private:
     bool isCanLeft(const ShapeBase& shape);
     bool isCanRight(const ShapeBase& shape);
 
+    // 图像是否可以变换形状，若图形变换位置会造成tile重叠或超出tile_board范围，则不能变换形状
+    bool isShapeCanChange(ShapeBase& shape);
+
     // 获取下一个出现的图形
     ShapeBase* nextShape(const tile_sprites& type);
 

@@ -10,5 +10,11 @@ private:
 public:
     ShapeT(const tile_sprites& type);
     ~ShapeT();
+
+    // 获取当前图形变化形状后的tile信息
+    std::vector<Tile*> getNextTilesInfo();
+
+    // 更新m_current_shape
+    void updateCurrentShape();
 };
 

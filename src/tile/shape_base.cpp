@@ -13,12 +13,21 @@ ShapeBase::~ShapeBase()
 
 std::vector<Tile*> ShapeBase::getTilesInfo() const
 {
+    // DEBUGLOG("ShapeBase||getTilesInfo");
     return m_tile_vector;
+}
+
+std::vector<Tile*> ShapeBase::getNextTilesInfo()
+{
+    INFOLOG("ShapeBase||getNextTilesInfo");
+    return m_next_tile_vector;
 }
 
 void ShapeBase::shapeChange()
 {
     DEBUGLOG("ShapeBase||shapeChange");
+    m_tile_vector.clear();
+    m_tile_vector.insert(m_tile_vector.end(), m_next_tile_vector.begin(), m_next_tile_vector.end());
 }
 
 bool ShapeBase::shapeDown(const float& down_rate)
@@ -66,4 +75,9 @@ void ShapeBase::render()
     {
         (*it)->render();
     }
+}
+
+void ShapeBase::updateCurrentShape()
+{
+    DEBUGLOG("ShapeBase||updateCurrentShape");
 }

@@ -8,7 +8,14 @@ private:
     // 图形的下降速度累积，用于控制下降的快慢
     float m_down_rate_sum;
 protected:
+    // 代表当前图形的tile集合
     std::vector<Tile*> m_tile_vector;
+
+    // 代表当前图形下一种形态的tile集合
+    std::vector<Tile*> m_next_tile_vector;
+
+    // 代表当前shape形状，初始化为0
+    short m_current_shape;
     
 public:
     ShapeBase(/* args */);
@@ -16,6 +23,9 @@ public:
     
     // 获取当前图形的tile信息
     std::vector<Tile*> getTilesInfo() const;
+
+    // 获取当前图形变化形状后的tile信息
+    virtual std::vector<Tile*> getNextTilesInfo();
 
     // 同一图像变换形状
     void shapeChange();
@@ -31,6 +41,9 @@ public:
 
     // 图像渲染
     void render();
+
+    // 更新m_current_shape
+    virtual void updateCurrentShape();
 };
 
 

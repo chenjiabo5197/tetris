@@ -59,10 +59,16 @@ void Tile::render()
     g_tile_texture->render(g_main_window->getRenderer(), m_box.x, m_box.y, 1.0, &g_tile_clips[m_type]);
 }
 
-bool Tile::set_coordinate(const int& x, const int& y)
+void Tile::setRelativeCoordinate(const int& x, const int& y)
 {
     m_box.x = x + m_offset_x;
     m_box.y = y + m_offset_y;
+}
+
+void Tile::setAbsoluteCoordinate(const int& x, const int& y)
+{
+    m_box.x = x;
+    m_box.y = y;
 }
 
 bool Tile::tileDown()
