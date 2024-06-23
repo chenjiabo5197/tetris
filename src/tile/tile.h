@@ -42,4 +42,10 @@ public:
 
     // tile向右移动一个tile距离
     bool tileRight();
+
+    // tile当前位于tile_board多少行，从上往下，从第0行开始
+    int getTileRow();
+
+    // tile当前位于tile_board多少列，从左往右，从第0列开始
+    int getTileCol();
 };

@@ -18,11 +18,12 @@ std::vector<Tile*> ShapeBase::getTilesInfo() const
 
 void ShapeBase::shapeChange()
 {
-
+    DEBUGLOG("ShapeBase||shapeChange");
 }
 
 bool ShapeBase::shapeDown(const float& down_rate)
 {
+    // DEBUGLOG("ShapeBase||shapeDown");
     // if (m_down_rate_sum < 1)
     // {
     //     m_down_rate_sum += down_rate;
@@ -43,6 +44,7 @@ bool ShapeBase::shapeDown(const float& down_rate)
 
 bool ShapeBase::shapeLeft()
 {
+    DEBUGLOG("ShapeBase||shapeLeft");
     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     {
         (*it)->tileLeft();
@@ -51,6 +53,7 @@ bool ShapeBase::shapeLeft()
 
 bool ShapeBase::shapeRight()
 {
+    DEBUGLOG("ShapeBase||shapeRight");
     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     {
         (*it)->tileRight();

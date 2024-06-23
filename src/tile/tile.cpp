@@ -67,6 +67,10 @@ bool Tile::set_coordinate(const int& x, const int& y)
 
 bool Tile::tileDown()
 {
+    /*
+        注意：
+            下落速度必须为 g_tile_length 的约数或者倍数，否则会出现tile重叠问题
+    */
     m_box.y = m_box.y + 1;
 }
 
@@ -78,4 +82,32 @@ bool Tile::tileLeft()
 bool Tile::tileRight()
 {
     m_box.x = m_box.x + g_tile_length;
+}
+
+int Tile::getTileRow()
+{
+    for (size_t i = 0; i < g_tile_board_region.h/g_tile_length; i++)
+    {
+        if (m_box.y == g_tile_board_region.y+i*g_tile_length)
+        {
+            DEBUGLOG("getTileRow||tile row={}", i);
+            return i;
+        }
+    }
+    ERRORLOG("getTileRow||tile row not match");
+    return -1;
+}
+
+int Tile::getTileCol()
+{
+    for (size_t i = 0; i < g_tile_board_region.w/g_tile_length; i++)
+    {
+        if (m_box.x == g_tile_board_region.x+i*g_tile_length)
+        {
+            DEBUGLOG("getTileCol||tile col={}", i);
+            return i;
+        }
+    }
+    ERRORLOG("getTileCol||tile col not match");
+    return -1;
 }

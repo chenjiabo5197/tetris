@@ -88,6 +88,20 @@ void PlayGameManage::init()
 
 void PlayGameManage::startRender()
 {
+    if (isCanDown(*shape_base))
+    {
+        shape_base->shapeDown(0.3);
+    }
+    else
+    {
+        // TODO 回收内存
+        // delete shape_base;
+        auto temp_vector = shape_base->getTilesInfo();
+        m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
+        shape_base = nullptr;
+        auto rand_tile_sprite = nextTileSprite();
+        shape_base = nextShape(rand_tile_sprite);
+    }
     for (int i = 0; i < m_array_length; i++)
     {
         m_playchess_buttons[i]->buttonRender(g_main_window->getRenderer());
@@ -97,17 +111,6 @@ void PlayGameManage::startRender()
         (*it)->render();
     }
     shape_base->render();
-    if (isCanDown(*shape_base))
-    {
-        shape_base->shapeDown(0.3);
-    }
-    else
-    {
-        auto temp_vector = shape_base->getTilesInfo();
-        m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
-        auto rand_tile_sprite = nextTileSprite();
-        shape_base = nextShape(rand_tile_sprite);
-    }
 }
 
 bool PlayGameManage::handleMouseClick(SDL_Event* event)
@@ -173,7 +176,13 @@ bool PlayGameManage::isCanDown(const ShapeBase& shape)
         // 判断目前vector中tile会不会阻碍该tile下落
         for (auto it2 = m_tile_vector.begin(); it2 != m_tile_vector.end(); it2++)
         {
-            if((*it)->getBox().x == (*it2)->getBox().x && (*it)->getBox().y+g_tile_length >= (*it2)->getBox().y)
+            // if((*it)->getBox().x == (*it2)->getBox().x && (*it)->getBox().y+g_tile_length >= (*it2)->getBox().y)  当此图形上方有tile时会误判，需修改
+            // 先判断当前tile是否在图形的下面，在当前图形上面的tile不予考虑
+            // if ((*it)->getBox().y >= (*it2)->getBox().y + g_tile_length)
+            // {
+            //     continue;
+            // }
+            if((*it)->getBox().x == (*it2)->getBox().x && (*it)->getBox().y+g_tile_length == (*it2)->getBox().y)
             {
                 DEBUGLOG("isCanDown||tile stop down line");
                 return false;
@@ -197,9 +206,10 @@ bool PlayGameManage::isCanLeft(const ShapeBase& shape)
         // 判断目前vector中tile会不会阻碍该tile左移
         for (auto it2 = m_tile_vector.begin(); it2 != m_tile_vector.end(); it2++)
         {
-            if((((*it)->getBox().y + g_tile_length >= (*it2)->getBox().y && (*it)->getBox().y + g_tile_length <= (*it2)->getBox().y + g_tile_length) || 
-            ((*it)->getBox().y >= (*it2)->getBox().y && (*it)->getBox().y <= (*it2)->getBox().y + g_tile_length)) && 
-            (*it)->getBox().x <= (*it2)->getBox().x+g_tile_length)
+            // 图形中tile和vector中tile的位置
+            if((((*it)->getBox().y + g_tile_length > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y ) || 
+            ((*it)->getBox().y > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y + g_tile_length) ||
+            ((*it)->getBox().y == (*it2)->getBox().y)) && (*it)->getBox().x <= (*it2)->getBox().x+g_tile_length)
             {
                 DEBUGLOG("isCanLeft||tile stop left line");
                 return false;
@@ -223,9 +233,9 @@ bool PlayGameManage::isCanRight(const ShapeBase& shape)
         // 判断目前vector中tile会不会阻碍该tile左移
         for (auto it2 = m_tile_vector.begin(); it2 != m_tile_vector.end(); it2++)
         {
-            if((((*it)->getBox().y + g_tile_length >= (*it2)->getBox().y && (*it)->getBox().y + g_tile_length <= (*it2)->getBox().y + g_tile_length) || 
-            ((*it)->getBox().y >= (*it2)->getBox().y && (*it)->getBox().y <= (*it2)->getBox().y + g_tile_length)) && 
-            (*it)->getBox().x+g_tile_length >= (*it2)->getBox().x)
+            if((((*it)->getBox().y + g_tile_length > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y ) || 
+            ((*it)->getBox().y > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y + g_tile_length) ||
+            ((*it)->getBox().y == (*it2)->getBox().y)) && (*it)->getBox().x+g_tile_length >= (*it2)->getBox().x)
             {
                 DEBUGLOG("isCanRight||tile stop right line");
                 return false;
