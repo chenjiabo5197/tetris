@@ -14,13 +14,16 @@ g_main_window_screen_height=900
 
 # 俄罗斯方块落子区域，长和宽是指此方向同时放下tiles的数量
 tile_board_width=11
-tile_board_height=25
-tile_board_center_x = 200
+tile_board_height=23
+tile_board_center_x = 220
 tile_board_center_y = 450
 
 # 俄罗斯方块组成
 tiles_resource_path=resources/tiles_all.png
-tile_side_length=34
+# tile的源大小
+tile_resource_side_length=34
+# tile渲染的大小
+tile_side_length=36
 
 # 普通文字
 ttf_font_path=resources/STZhongsong.ttf

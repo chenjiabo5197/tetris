@@ -30,8 +30,10 @@ extern SDLTexture* g_tile_texture;
 // tile每个区域
 extern SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
 
-// tile边长
+// tile实际渲染的边长
 extern int g_tile_length;
+// tile原图的边长
+extern int g_tile_resource_length;
 
 // tileboard 区域
 extern SDL_Rect g_tile_board_region;

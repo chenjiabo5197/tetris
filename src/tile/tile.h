@@ -18,6 +18,10 @@ private:
     int m_offset_x;
     int m_offset_y;
 
+    // 记录tile在tileboard中的行列
+    int m_tile_col;
+    int m_tile_row;
+
 public:
     //Initializes position and type
     Tile(const tile_sprites& type);
@@ -38,7 +42,7 @@ public:
     void setAbsoluteCoordinate(const int& x, const int& y);
 
     // 设置tile在下降
-    bool tileDown();
+    bool tileDown(const int& rate);
 
     // tile向左移动一个tile距离
     bool tileLeft();
@@ -47,8 +51,15 @@ public:
     bool tileRight();
 
     // tile当前位于tile_board多少行，从上往下，从第0行开始
-    int getTileRow();
+    int updateTileRow();
 
     // tile当前位于tile_board多少列，从左往右，从第0列开始
+    int updateTileCol();
+
+    // 给m_tile_col与m_tile_row赋值
+    void updateTileRowCol();
+
+    // 获取tile的m_tile_col m_tile_row
+    int getTileRow();
     int getTileCol();
 };

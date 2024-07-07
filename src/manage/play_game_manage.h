@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <SDL2/SDL.h>
+#include "set"
 #include "common.h"
 #include "global.h"
 #include "sdl_button.h"
@@ -72,6 +73,9 @@ private:
 
     // 下一个出现的图形颜色
     tile_sprites nextTileSprite();
+
+    // 判断tile当前行是否可消除，若可消除则消除，不可消除跳过
+    void updateEliminate(const int& row);
 
 public:
     PlayGameManage(const Config& config);

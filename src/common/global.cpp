@@ -14,6 +14,8 @@ SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
 
 int g_tile_length = -1;
 
+int g_tile_resource_length = -1;
+
 SDL_Rect g_tile_board_region = {-1, -1, -1, -1};
 
 int g_tile_board_middle = -1;

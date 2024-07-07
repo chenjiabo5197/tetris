@@ -13,6 +13,9 @@ extern SDL_Rect g_tile_board_region;
 // tile边长
 extern int g_tile_length;
 
+// tile原图的边长
+extern int g_tile_resource_length;
+
 Tile::Tile(const tile_sprites& type)
 {
     //Get the offsets
@@ -56,7 +59,7 @@ void Tile::render()
         ERRORLOG("render||m_box not set value");
         return;
     }
-    g_tile_texture->render(g_main_window->getRenderer(), m_box.x, m_box.y, 1.0, &g_tile_clips[m_type]);
+    g_tile_texture->render(g_main_window->getRenderer(), m_box.x, m_box.y, static_cast<float>(g_tile_length)/g_tile_resource_length, &g_tile_clips[m_type]);
 }
 
 void Tile::setRelativeCoordinate(const int& x, const int& y)
@@ -71,13 +74,13 @@ void Tile::setAbsoluteCoordinate(const int& x, const int& y)
     m_box.y = y;
 }
 
-bool Tile::tileDown()
+bool Tile::tileDown(const int& rate)
 {
     /*
         注意：
             下落速度必须为 g_tile_length 的约数或者倍数，否则会出现tile重叠问题
     */
-    m_box.y = m_box.y + 1;
+    m_box.y = m_box.y + rate;
 }
 
 bool Tile::tileLeft()
@@ -90,30 +93,66 @@ bool Tile::tileRight()
     m_box.x = m_box.x + g_tile_length;
 }
 
-int Tile::getTileRow()
+int Tile::updateTileRow()
 {
     for (size_t i = 0; i < g_tile_board_region.h/g_tile_length; i++)
     {
         if (m_box.y == g_tile_board_region.y+i*g_tile_length)
         {
-            DEBUGLOG("getTileRow||tile row={}", i);
+            DEBUGLOG("updateTileRow||tile row={}", i);
             return i;
         }
     }
-    ERRORLOG("getTileRow||tile row not match");
+    ERRORLOG("updateTileRow||tile row not match");
     return -1;
 }
 
-int Tile::getTileCol()
+int Tile::updateTileCol()
 {
     for (size_t i = 0; i < g_tile_board_region.w/g_tile_length; i++)
     {
         if (m_box.x == g_tile_board_region.x+i*g_tile_length)
         {
-            DEBUGLOG("getTileCol||tile col={}", i);
+            DEBUGLOG("updateTileCol||tile col={}", i);
             return i;
         }
     }
-    ERRORLOG("getTileCol||tile col not match");
+    ERRORLOG("updateTileCol||tile col not match");
     return -1;
+}
+
+void Tile::updateTileRowCol()
+{
+    int temp_col = updateTileCol();
+    if (temp_col != -1)
+    {
+        m_tile_col = temp_col;
+        DEBUGLOG("updateTileRowCol||m_tile_col={}", m_tile_col);
+    }
+    else
+    {
+        m_tile_col = -1;
+        ERRORLOG("updateTileRowCol||tile col not match");
+    }
+    int temp_row = updateTileRow();
+    if (temp_col != -1)
+    {
+        m_tile_row = temp_row;
+        DEBUGLOG("updateTileRowCol||m_tile_row={}", m_tile_row);
+    }
+    else
+    {
+        m_tile_row = -1;
+        ERRORLOG("updateTileRowCol||tile row not match");
+    }
+}
+
+int Tile::getTileRow()
+{
+    return m_tile_row;
+}
+
+int Tile::getTileCol()
+{
+    return m_tile_col;
 }

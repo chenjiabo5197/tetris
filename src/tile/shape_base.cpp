@@ -47,7 +47,7 @@ bool ShapeBase::shapeDown(const float& down_rate)
     // }
     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     {
-        (*it)->tileDown();
+        (*it)->tileDown(1);
     }
 }
 

@@ -12,6 +12,8 @@ extern SDL_Rect g_tile_clips[TOTAL_TILE_SPRITES];
 
 // tile边长
 extern int g_tile_length;
+// tile原图的边长
+extern int g_tile_resource_length;
 
 // tileboard 区域
 extern SDL_Rect g_tile_board_region;
@@ -30,6 +32,7 @@ PlayGameManage::PlayGameManage(const Config& config)
     m_playchess_buttons[0] = new SDLButton(config, "back_menu", m_buttons_x, m_buttons_y);
     m_array_length = sizeof(m_playchess_buttons) / sizeof(m_playchess_buttons[0]);
     m_tiles_path = config.Read("tiles_resource_path", temp);
+    g_tile_resource_length = config.Read("tile_resource_side_length", 0);
     g_tile_length = config.Read("tile_side_length", 0);
     m_tile_board_col_nums = config.Read("tile_board_width", 0);
     m_tile_board_row_nums = config.Read("tile_board_height", 0);
@@ -67,10 +70,10 @@ void PlayGameManage::init()
     DEBUGLOG("init||load g_tile_texture resource success");
     for (int i = 0; i < TOTAL_TILE_SPRITES; i++)
     {
-        g_tile_clips[i].x = g_tile_length * i;
+        g_tile_clips[i].x = g_tile_resource_length * i;
         g_tile_clips[i].y = 0;
-        g_tile_clips[i].w = g_tile_length;
-        g_tile_clips[i].h = g_tile_length;
+        g_tile_clips[i].w = g_tile_resource_length;
+        g_tile_clips[i].h = g_tile_resource_length;
     }
     INFOLOG("init||init success");
     g_tile_board_region = m_tile_board->getLeftTopCoordinate();
@@ -98,6 +101,17 @@ void PlayGameManage::startRender()
         // delete shape_base;
         auto temp_vector = shape_base->getTilesInfo();
         m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
+        std::set<int> row_set;
+        for (std::vector<Tile*>::iterator it=temp_vector.begin(); it < temp_vector.end(); it++)
+        {
+            (*it)->updateTileRowCol();
+            row_set.insert((*it)->getTileRow());
+        }
+        for (auto it = row_set.begin(); it != row_set.end(); it++)
+        {
+            updateEliminate(*it);
+        }
+        
         shape_base = nullptr;
         auto rand_tile_sprite = nextTileSprite();
         shape_base = nextShape(rand_tile_sprite);
@@ -107,7 +121,8 @@ void PlayGameManage::startRender()
         m_playchess_buttons[i]->buttonRender(g_main_window->getRenderer());
     }
     m_tile_board->render();
-    for (std::vector<Tile*>::iterator it=m_tile_vector.begin(); it < m_tile_vector.end(); it++) {
+    for (std::vector<Tile*>::iterator it=m_tile_vector.begin(); it < m_tile_vector.end(); it++) 
+    {
         (*it)->render();
     }
     shape_base->render();
@@ -375,4 +390,43 @@ tile_sprites PlayGameManage::nextTileSprite()
     return rand_tile_sprite;
 }
 
-
+void PlayGameManage::updateEliminate(const int& row)
+{
+    std::set<int> row_set;
+    for (std::vector<Tile*>::iterator it=m_tile_vector.begin(); it < m_tile_vector.end(); it++) 
+    {
+        if ((*it)->getTileRow() == row)
+        {
+            row_set.insert((*it)->getTileCol());
+        }
+    }
+    if (row_set.size() == m_tile_board_col_nums)
+    {
+        INFOLOG("updateEliminate||row={}||row_set.size()={}", row, row_set.size());
+        // 可以删除该行tile
+        for (std::vector<Tile*>::iterator it=m_tile_vector.begin(); it < m_tile_vector.end();) 
+        {
+            DEBUGLOG("updateEliminate||row={}||tile_row={}", row, (*it)->getTileRow());
+            if ((*it)->getTileRow() == row)
+            {
+                DEBUGLOG("updateEliminate||col={}", (*it)->getTileCol());
+                m_tile_vector.erase(it);
+            }
+            else if ((*it)->getTileRow() < row)
+            {
+                (*it)->tileDown(g_tile_length);
+                (*it)->updateTileRowCol();
+                DEBUGLOG("updateEliminate||row={}||tile_row={}", row, (*it)->getTileRow());
+                it++;
+            }
+            else
+            {
+                it++;
+            }
+        }
+    }
+    else
+    {
+        DEBUGLOG("updateEliminate||row={}||row_set.size()={}", row, row_set.size());
+    }
+}
