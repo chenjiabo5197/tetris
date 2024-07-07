@@ -14,8 +14,9 @@ ShapeL::ShapeL(const tile_sprites& type)
         m_tile_vector.push_back(temp);
     }
     Tile* temp = new Tile(type);
-    temp->setRelativeCoordinate((g_tile_board_middle-1)*g_tile_length, 0);
+    temp->setRelativeCoordinate((g_tile_board_middle+1)*g_tile_length, 0);
     m_tile_vector.push_back(temp);
+    m_current_shape = 0;
     INFOLOG("ShapeL construct success");
 }
 
@@ -28,49 +29,73 @@ std::vector<Tile*> ShapeL::getNextTilesInfo()
 {
     // 先清空m_next_tile_vector
     m_next_tile_vector.clear();
+    // 第二块tile不变，为基准
+    auto base_tile = m_tile_vector.at(1);
+    tile_sprites base_type = base_tile->getType();
+    int base_tile_x = base_tile->getBox().x;
+    int base_tile_y = base_tile->getBox().y;
+    auto first_tile = new Tile(base_type);
+    auto third_tile = new Tile(base_type);
+    auto forth_tile = new Tile(base_type);
     // I只有两种形态
     switch (m_current_shape)
     {
     case 0:
-    {
-        // 横向转化为竖向
-        // 第三块tile不变，为基准
-        auto base_tile = m_tile_vector.at(2);
-        tile_sprites base_type = base_tile->getType();
-        int base_tile_x = base_tile->getBox().x;
-        int base_tile_y = base_tile->getBox().y;
-        auto first_tile = new Tile(base_type);
-        first_tile->setAbsoluteCoordinate(base_tile_x, base_tile_y-2*g_tile_length);
+        // 从L的初始形态(竖撇)顺时针旋转90度，变为L
+        first_tile->setAbsoluteCoordinate(base_tile_x, base_tile_y-g_tile_length);
         m_next_tile_vector.push_back(first_tile);
-        auto second_tile = new Tile(base_type);
-        second_tile->setAbsoluteCoordinate(base_tile_x, base_tile_y-g_tile_length);
-        m_next_tile_vector.push_back(second_tile);
         m_next_tile_vector.push_back(base_tile);
-        auto forth_tile = new Tile(base_type);
-        forth_tile->setAbsoluteCoordinate(base_tile_x, base_tile_y+g_tile_length);
+        third_tile->setAbsoluteCoordinate(base_tile_x, base_tile_y+g_tile_length);
+        m_next_tile_vector.push_back(third_tile);
+        forth_tile->setAbsoluteCoordinate(base_tile_x+g_tile_length, base_tile_y+g_tile_length);
         m_next_tile_vector.push_back(forth_tile);
+        for (auto i = m_next_tile_vector.begin(); i != m_next_tile_vector.end(); i++)
+        {
+            DEBUGLOG("x={}||y={}", (*i)->getBox().x, (*i)->getBox().y);
+        }
         break;
-    }
     case 1:
-    {
-        // 竖向转化为横向
-        // 第三块tile不变，为基准
-        auto base_tile = m_tile_vector.at(2);
-        tile_sprites base_type = base_tile->getType();
-        int base_tile_x = base_tile->getBox().x;
-        int base_tile_y = base_tile->getBox().y;
-        auto first_tile = new Tile(base_type);
-        first_tile->setAbsoluteCoordinate(base_tile_x-2*g_tile_length, base_tile_y);
+        // 从L形态再顺时针旋转90度
+        first_tile->setAbsoluteCoordinate(base_tile_x-g_tile_length, base_tile_y);
         m_next_tile_vector.push_back(first_tile);
-        auto second_tile = new Tile(base_type);
-        second_tile->setAbsoluteCoordinate(base_tile_x-g_tile_length, base_tile_y);
-        m_next_tile_vector.push_back(second_tile);
         m_next_tile_vector.push_back(base_tile);
-        auto forth_tile = new Tile(base_type);
-        forth_tile->setAbsoluteCoordinate(base_tile_x+g_tile_length, base_tile_y);
+        third_tile->setAbsoluteCoordinate(base_tile_x+g_tile_length, base_tile_y);
+        m_next_tile_vector.push_back(third_tile);
+        forth_tile->setAbsoluteCoordinate(base_tile_x-g_tile_length, base_tile_y+g_tile_length);
         m_next_tile_vector.push_back(forth_tile);
+        for (auto i = m_next_tile_vector.begin(); i != m_next_tile_vector.end(); i++)
+        {
+            DEBUGLOG("x={}||y={}", (*i)->getBox().x, (*i)->getBox().y);
+        }
         break;
-    }
+    case 2:
+        // 从L形态顺时针旋转90度再顺时针旋转90度
+        first_tile->setAbsoluteCoordinate(base_tile_x, base_tile_y+g_tile_length);
+        m_next_tile_vector.push_back(first_tile);
+        m_next_tile_vector.push_back(base_tile);
+        third_tile->setAbsoluteCoordinate(base_tile_x, base_tile_y-g_tile_length);
+        m_next_tile_vector.push_back(third_tile);
+        forth_tile->setAbsoluteCoordinate(base_tile_x-g_tile_length, base_tile_y-g_tile_length);
+        m_next_tile_vector.push_back(forth_tile);
+        for (auto i = m_next_tile_vector.begin(); i != m_next_tile_vector.end(); i++)
+        {
+            DEBUGLOG("x={}||y={}", (*i)->getBox().x, (*i)->getBox().y);
+        }
+        break;
+    case 3:
+        // 从L形态顺时针旋转180度再顺时针旋转90度，变为L的初始形态(竖撇)
+        first_tile->setAbsoluteCoordinate(base_tile_x-g_tile_length, base_tile_y);
+        m_next_tile_vector.push_back(first_tile);
+        m_next_tile_vector.push_back(base_tile);
+        third_tile->setAbsoluteCoordinate(base_tile_x+g_tile_length, base_tile_y);
+        m_next_tile_vector.push_back(third_tile);
+        forth_tile = m_tile_vector.at(3);
+        m_next_tile_vector.push_back(forth_tile);
+        for (auto i = m_next_tile_vector.begin(); i != m_next_tile_vector.end(); i++)
+        {
+            DEBUGLOG("x={}||y={}", (*i)->getBox().x, (*i)->getBox().y);
+        }
+        break;
     default:
         ERRORLOG("getNextTilesInfo||unknown m_current_shape||m_current_shape={}", m_current_shape);
         break;
@@ -84,12 +109,22 @@ void ShapeL::updateCurrentShape()
     switch (m_current_shape)
     {
     case 0:
-        // 横向转化为竖向
+        // 从L的初始形态(竖撇)顺时针旋转90度，变为L
         m_current_shape = 1;
         INFOLOG("updateCurrentShape||m_current_shape={}", m_current_shape);
         break;
     case 1:
-        // 竖向转化为横向
+        // 从L形态再顺时针旋转90度
+        m_current_shape = 2;
+        INFOLOG("updateCurrentShape||m_current_shape={}", m_current_shape);
+        break;
+    case 2:
+        // 从L形态顺时针旋转90度再顺时针旋转90度
+        m_current_shape = 3;
+        INFOLOG("updateCurrentShape||m_current_shape={}", m_current_shape);
+        break;
+    case 3:
+        // 从L形态顺时针旋转180度再顺时针旋转90度，变为L的初始形态(竖撇)
         m_current_shape = 0;
         INFOLOG("updateCurrentShape||m_current_shape={}", m_current_shape);
         break;

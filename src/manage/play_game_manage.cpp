@@ -174,7 +174,7 @@ bool PlayGameManage::isCanDown(const ShapeBase& shape)
         // 判断当前tile是否越过tile_board底线
         if ((*it)->getBox().y+g_tile_length >= g_tile_board_region.y+g_tile_board_region.h)
         {
-            DEBUGLOG("isCanDown||tile_board down line");
+            ERRORLOG("isCanDown||tile_board down line");
             return false;
         }
         // 判断目前vector中tile会不会阻碍该tile下落
@@ -188,7 +188,7 @@ bool PlayGameManage::isCanDown(const ShapeBase& shape)
             // }
             if((*it)->getBox().x == (*it2)->getBox().x && (*it)->getBox().y+g_tile_length == (*it2)->getBox().y)
             {
-                DEBUGLOG("isCanDown||tile stop down line");
+                ERRORLOG("isCanDown||tile stop down line");
                 return false;
             }
         }
@@ -204,7 +204,7 @@ bool PlayGameManage::isCanLeft(const ShapeBase& shape)
         // 判断当前tile是否越过tile_board左侧边界
         if ((*it)->getBox().x <= g_tile_board_region.x)
         {
-            DEBUGLOG("isCanLeft||tile_board left line");
+            ERRORLOG("isCanLeft||tile_board left line");
             return false;
         }
         // 判断目前vector中tile会不会阻碍该tile左移
@@ -213,9 +213,9 @@ bool PlayGameManage::isCanLeft(const ShapeBase& shape)
             // 图形中tile和vector中tile的位置
             if((((*it)->getBox().y + g_tile_length > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y ) || 
             ((*it)->getBox().y > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y + g_tile_length) ||
-            ((*it)->getBox().y == (*it2)->getBox().y)) && (*it)->getBox().x <= (*it2)->getBox().x+g_tile_length)
+            ((*it)->getBox().y == (*it2)->getBox().y)) && (*it)->getBox().x == (*it2)->getBox().x+g_tile_length)
             {
-                DEBUGLOG("isCanLeft||tile stop left line");
+                ERRORLOG("isCanLeft||tile stop left line");
                 return false;
             }
         }
@@ -231,7 +231,7 @@ bool PlayGameManage::isCanRight(const ShapeBase& shape)
         // 判断当前tile是否越过tile_board右侧边界
         if ((*it)->getBox().x+g_tile_length >= g_tile_board_region.x+g_tile_board_region.w)
         {
-            DEBUGLOG("isCanRight||tile_board right line");
+            ERRORLOG("isCanRight||tile_board right line");
             return false;
         }
         // 判断目前vector中tile会不会阻碍该tile左移
@@ -239,9 +239,9 @@ bool PlayGameManage::isCanRight(const ShapeBase& shape)
         {
             if((((*it)->getBox().y + g_tile_length > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y ) || 
             ((*it)->getBox().y > (*it2)->getBox().y && (*it)->getBox().y < (*it2)->getBox().y + g_tile_length) ||
-            ((*it)->getBox().y == (*it2)->getBox().y)) && (*it)->getBox().x+g_tile_length >= (*it2)->getBox().x)
+            ((*it)->getBox().y == (*it2)->getBox().y)) && (*it)->getBox().x+g_tile_length == (*it2)->getBox().x)
             {
-                DEBUGLOG("isCanRight||tile stop right line");
+                ERRORLOG("isCanRight||tile stop right line");
                 return false;
             }
         }
@@ -257,19 +257,19 @@ bool PlayGameManage::isShapeCanChange(ShapeBase& shape)
         // 判断当前tile是否越过tile_board底线
         if ((*it)->getBox().y+g_tile_length > g_tile_board_region.y+g_tile_board_region.h)
         {
-            DEBUGLOG("isShapeCanChange||tile_board down line");
+            ERRORLOG("isShapeCanChange||tile_board down line");
             return false;
         }
         // 判断当前tile是否越过tile_board左侧边界
         if ((*it)->getBox().x < g_tile_board_region.x)
         {
-            DEBUGLOG("isShapeCanChange||tile_board left line");
+            ERRORLOG("isShapeCanChange||tile_board left line");
             return false;
         }
         // 判断当前tile是否越过tile_board右侧边界
         if ((*it)->getBox().x+g_tile_length > g_tile_board_region.x+g_tile_board_region.w)
         {
-            DEBUGLOG("isShapeCanChange||tile_board right line");
+            ERRORLOG("isShapeCanChange||tile_board right line");
             return false;
         }
         // 判断目前vector中tile与该tile有部分重叠区域
@@ -282,7 +282,7 @@ bool PlayGameManage::isShapeCanChange(ShapeBase& shape)
             ((*it)->getBox().x > (*it2)->getBox().x && (*it)->getBox().x < (*it2)->getBox().x + g_tile_length) ||
             ((*it)->getBox().x == (*it2)->getBox().x)))
             {
-                DEBUGLOG("isShapeCanChange||tile stop change");
+                ERRORLOG("isShapeCanChange||tile stop change");
                 return false;
             }
         }
@@ -297,35 +297,35 @@ ShapeBase* PlayGameManage::nextShape(const tile_sprites& type)
     int rand_index = m_last_shape_index;
     do
     {
-        // rand_index = rand() % 7;
-        rand_index = 0;
+        rand_index = rand() % 7;
+        // rand_index = 0;
         DEBUGLOG("nextShape||rand_index={}", rand_index);
     } while (rand_index == m_last_shape_index);
-    // m_last_shape_index = rand_index;
+    m_last_shape_index = rand_index;
     ShapeBase* rand_shape = nullptr;
     switch (rand_index)
     {
     case 0:
         rand_shape = new ShapeI(type);
         break;
-    // case 1:
-    //     rand_shape = new ShapeJ(type);
-    //     break;
-    // case 2:
-    //     rand_shape = new ShapeL(type);
-    //     break;
-    // case 3:
-    //     rand_shape = new ShapeO(type);
-    //     break;
-    // case 4:
-    //     rand_shape = new ShapeS(type);
-    //     break;
-    // case 5:
-    //     rand_shape = new ShapeT(type);
-    //     break;
-    // case 6:
-    //     rand_shape = new ShapeZ(type);
-    //     break;
+    case 1:
+        rand_shape = new ShapeJ(type);
+        break;
+    case 2:
+        rand_shape = new ShapeL(type);
+        break;
+    case 3:
+        rand_shape = new ShapeO(type);
+        break;
+    case 4:
+        rand_shape = new ShapeS(type);
+        break;
+    case 5:
+        rand_shape = new ShapeT(type);
+        break;
+    case 6:
+        rand_shape = new ShapeZ(type);
+        break;
     default:
         ERRORLOG("nextShape||unknown shape index||rand_index={}", rand_index);
         break;
