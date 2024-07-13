@@ -12,6 +12,7 @@
 #include "set"
 #include "common.h"
 #include "global.h"
+#include "my_utils.h"
 #include "sdl_button.h"
 #include "sdl_window.h"
 #include "logger.h"
@@ -76,6 +77,9 @@ private:
 
     // 判断tile当前行是否可消除，若可消除则消除，不可消除跳过
     void updateEliminate(const int& row);
+
+    // 获取当前shape可以下降的最大距离
+    int distanceCanShapeDown(const ShapeBase& shape);
 
 public:
     PlayGameManage(const Config& config);

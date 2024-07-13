@@ -1,5 +1,7 @@
 #include "my_utils.h"
 
+std::default_random_engine generator;
+
 bool isFileExistAndNotEmpty(const std::string& fileName)
 {
 	std::ifstream ifs;
@@ -156,3 +158,9 @@ void sleepSeconds(const float& sceonds)
 	#endif
 }
 
+int getRandomNum(const int& low, const int& high)
+{
+    std::uniform_int_distribution<int> distribution(low, high);  //左闭右闭区间
+    // generator.seed(time(0));
+	return distribution(generator);
+}

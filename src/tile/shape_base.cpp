@@ -11,6 +11,22 @@ ShapeBase::~ShapeBase()
     INFOLOG("ShapeBase ~ShapeBase success");
 }
 
+ShapeBase::ShapeBase(const ShapeBase& shape)
+{
+    for (auto it = shape.m_tile_vector.begin(); it != shape.m_tile_vector.end(); it++)
+    {
+        Tile* temp_tile = new Tile(**it);
+        m_tile_vector.push_back(temp_tile);
+    }
+    for (auto it = shape.m_next_tile_vector.begin(); it != shape.m_next_tile_vector.end(); it++)
+    {
+        Tile* temp_tile = new Tile(**it);
+        m_next_tile_vector.push_back(temp_tile);
+    }
+    m_down_rate_sum = shape.m_down_rate_sum;
+    m_current_shape = shape.m_current_shape;
+}
+
 std::vector<Tile*> ShapeBase::getTilesInfo() const
 {
     // DEBUGLOG("ShapeBase||getTilesInfo");
@@ -47,7 +63,7 @@ bool ShapeBase::shapeDown(const float& down_rate)
     // }
     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
     {
-        (*it)->tileDown(1);
+        (*it)->tileDown(down_rate);
     }
 }
 

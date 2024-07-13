@@ -27,6 +27,8 @@ public:
     Tile(const tile_sprites& type);
     ~Tile();
 
+    Tile(const Tile& tile);
+
     //Get the tile type
     tile_sprites getType();
 

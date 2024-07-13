@@ -37,6 +37,19 @@ Tile::~Tile()
     INFOLOG("Tile ~Tile success");
 }
 
+Tile::Tile(const Tile& tile)
+{
+    m_box = tile.m_box;
+
+    m_type = tile.m_type;
+
+    m_offset_x = tile.m_offset_x;
+    m_offset_y = tile.m_offset_y;
+
+    m_tile_col = tile.m_tile_col;
+    m_tile_row = tile.m_tile_row;
+}
+
 tile_sprites Tile::getType()
 {
     return m_type;
@@ -80,6 +93,7 @@ bool Tile::tileDown(const int& rate)
         注意：
             下落速度必须为 g_tile_length 的约数或者倍数，否则会出现tile重叠问题
     */
+
     m_box.y = m_box.y + rate;
 }
 

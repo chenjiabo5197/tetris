@@ -20,6 +20,8 @@ protected:
 public:
     ShapeBase(/* args */);
     ~ShapeBase();
+
+    ShapeBase(const ShapeBase& shape);
     
     // 获取当前图形的tile信息
     std::vector<Tile*> getTilesInfo() const;

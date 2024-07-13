@@ -93,7 +93,7 @@ void PlayGameManage::startRender()
 {
     if (isCanDown(*shape_base))
     {
-        shape_base->shapeDown(0.3);
+        shape_base->shapeDown(1);
     }
     else
     {
@@ -146,10 +146,7 @@ void PlayGameManage::handleEvents(SDL_Event* event)
     }
     else if(currentKeyStates[SDL_SCANCODE_DOWN])
     {
-        if (isCanDown(*shape_base))
-        {
-            shape_base->shapeDown(100);
-        }
+        shape_base->shapeDown(distanceCanShapeDown(*shape_base));
     }
     else if(currentKeyStates[SDL_SCANCODE_LEFT])
     {
@@ -308,11 +305,10 @@ bool PlayGameManage::isShapeCanChange(ShapeBase& shape)
 
 ShapeBase* PlayGameManage::nextShape(const tile_sprites& type)
 {
-    srand((unsigned) time(nullptr));
     int rand_index = m_last_shape_index;
     do
     {
-        rand_index = rand() % 7;
+        rand_index = getRandomNum(0, 6);
         // rand_index = 0;
         DEBUGLOG("nextShape||rand_index={}", rand_index);
     } while (rand_index == m_last_shape_index);
@@ -351,11 +347,10 @@ ShapeBase* PlayGameManage::nextShape(const tile_sprites& type)
 
 tile_sprites PlayGameManage::nextTileSprite()
 {
-    srand((unsigned) time(nullptr));
     int rand_index = m_last_tile_sprite_index;
     do
     {
-        rand_index = rand() % 7;
+        rand_index = getRandomNum(0, 6);
         DEBUGLOG("nextTileSprite||rand_index={}", rand_index);
     } while (rand_index == m_last_tile_sprite_index);
     m_last_tile_sprite_index = rand_index;
@@ -406,7 +401,7 @@ void PlayGameManage::updateEliminate(const int& row)
         // 可以删除该行tile
         for (std::vector<Tile*>::iterator it=m_tile_vector.begin(); it < m_tile_vector.end();) 
         {
-            DEBUGLOG("updateEliminate||row={}||tile_row={}", row, (*it)->getTileRow());
+            // DEBUGLOG("updateEliminate||row={}||tile_row={}", row, (*it)->getTileRow());
             if ((*it)->getTileRow() == row)
             {
                 DEBUGLOG("updateEliminate||col={}", (*it)->getTileCol());
@@ -429,4 +424,19 @@ void PlayGameManage::updateEliminate(const int& row)
     {
         DEBUGLOG("updateEliminate||row={}||row_set.size()={}", row, row_set.size());
     }
+}
+
+
+int PlayGameManage::distanceCanShapeDown(const ShapeBase& shape)
+{
+    short distance = 0;
+    ShapeBase temp_shape = shape;
+    while (isCanDown(temp_shape))
+    {
+        temp_shape.shapeDown(1);
+        distance++;
+        // DEBUGLOG("distanceCanShapeDown||distance={}", distance);
+    }
+    INFOLOG("distanceCanShapeDown||distance={}", distance);
+    return distance;
 }

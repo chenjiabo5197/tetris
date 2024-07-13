@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
+#include <random>
 #include "logger.h"
 
 #if defined(__linux__)
@@ -45,6 +46,9 @@ extern BestScoreUser getIBestScoreUser(const std::string& userName, const int& c
 
 // 让程序休眠的秒数
 extern void sleepSeconds(const float& seconds);
+
+// 传入范围（左闭右闭区间）获取随机数
+extern int getRandomNum(const int& low, const int& high);
 
 // 交换两个值
 template<typename T>
