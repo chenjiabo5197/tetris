@@ -26,9 +26,9 @@ ShapeBase* shape_base = nullptr;
 PlayGameManage::PlayGameManage(const Config& config)
 {
     std::string temp;
-    m_button_interval = config.Read("playchess_buttons_interval", 0);
-    m_buttons_x = config.Read("playchess_buttons_x", 0);
-    m_buttons_y = config.Read("playchess_buttons_y", 0);
+    m_button_interval = config.Read("playmanage_buttons_interval", 0);
+    m_buttons_x = config.Read("playmanage_buttons_x", 0);
+    m_buttons_y = config.Read("playmanage_buttons_y", 0);
     m_playchess_buttons[0] = new SDLButton(config, "back_menu", m_buttons_x, m_buttons_y);
     m_array_length = sizeof(m_playchess_buttons) / sizeof(m_playchess_buttons[0]);
     m_tiles_path = config.Read("tiles_resource_path", temp);
@@ -93,7 +93,7 @@ void PlayGameManage::startRender()
 {
     if (isCanDown(*shape_base))
     {
-        shape_base->shapeDown(1);
+        shape_base->shapeDown(0.1);
     }
     else
     {

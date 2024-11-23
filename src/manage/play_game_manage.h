@@ -27,6 +27,7 @@
 #include "shape_s.h"
 #include "shape_t.h"
 #include "shape_z.h"
+#include "tile_data_board.h"
 
 class PlayGameManage
 {
@@ -35,6 +36,9 @@ private:
     SDLButton* m_playchess_buttons[1];
 
     TileBoard* m_tile_board;
+
+    // 数据板
+    TileDataBoard* m_data_board;
 
     // 按键的数组长度，渲染按键时使用
     int m_array_length;

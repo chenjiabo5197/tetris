@@ -8,6 +8,8 @@ ShapeBase::ShapeBase(/* args */)
 
 ShapeBase::~ShapeBase()
 {
+    m_tile_vector.clear();
+    m_next_tile_vector.clear();
     INFOLOG("ShapeBase ~ShapeBase success");
 }
 
@@ -48,22 +50,24 @@ void ShapeBase::shapeChange()
 
 bool ShapeBase::shapeDown(const float& down_rate)
 {
-    // DEBUGLOG("ShapeBase||shapeDown");
-    // if (m_down_rate_sum < 1)
-    // {
-    //     m_down_rate_sum += down_rate;
-    // }
-    // else if (m_down_rate_sum >= 1)
-    // {
-    //     m_down_rate_sum = 0;
-    //     for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
-    //     {
-    //         (*it)->tileDown();
-    //     }
-    // }
-    for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
+    if (down_rate < 1)
     {
-        (*it)->tileDown(down_rate);
+        m_down_rate_sum += down_rate;
+        if (m_down_rate_sum >= 1)
+        {
+            m_down_rate_sum = 0;
+            for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
+            {
+                (*it)->tileDown(1);
+            }
+        }
+    }
+    else
+    {
+        for (auto it = m_tile_vector.begin(); it != m_tile_vector.end(); it++)
+        {
+            (*it)->tileDown(down_rate);
+        }
     }
 }
 

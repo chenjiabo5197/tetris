@@ -15,8 +15,8 @@ g_main_window_screen_height=900
 # 俄罗斯方块落子区域，长和宽是指此方向同时放下tiles的数量
 tile_board_width=11
 tile_board_height=23
-tile_board_center_x = 220
-tile_board_center_y = 450
+tile_board_center_x=220
+tile_board_center_y=450
 
 # 俄罗斯方块组成
 tiles_resource_path=resources/tiles_all.png
@@ -44,10 +44,16 @@ exit_game_resourece_path=resources/exit_game.png
 exit_game_width=260
 exit_game_height=83
 exit_game_multiple=0.6
+
 # 下棋界面及结果结算界面  按键中心需要赋值
-playchess_buttons_interval=50
-playchess_buttons_x=500
-playchess_buttons_y=400
+playmanage_buttons_interval=50
+playmanage_buttons_x=500
+playmanage_buttons_y=400
+# 数据中心坐标
+data_board_x=450
+data_board_y=200
+
+# 结算页面
 settlement_buttons_interval=50
 settlement_buttons_x=800
 settlement_buttons_y=400
@@ -55,10 +61,6 @@ back_menu_resourece_path=resources/back_menu.png
 back_menu_width=260
 back_menu_height=83
 back_menu_multiple=0.5
-withdraw_resourece_path=resources/withdraw.png
-withdraw_width=260
-withdraw_height=83
-withdraw_multiple=0.5
 again_game_resourece_path=resources/again_game.png
 again_game_width=260
 again_game_height=83
