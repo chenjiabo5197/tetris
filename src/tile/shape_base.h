@@ -46,6 +46,8 @@ public:
 
     // 更新m_current_shape
     virtual void updateCurrentShape();
+
+    virtual void resetShape(const tile_sprites& type, const int& defaultTileX = -1, const int& defaultTileY = -1);
 };
 
 

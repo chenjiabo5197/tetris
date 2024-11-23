@@ -80,7 +80,7 @@ private:
     ShapeBase* nextShape(const tile_sprites& type);
 
     // 下一个出现的图形颜色
-    tile_sprites nextTileSprite();
+    tile_sprites nextTileSprite(int defaultSpriteIndex = -1);
 
     // 判断tile当前行是否可消除，若可消除则消除，不可消除跳过
     bool updateEliminate(const int& row);
@@ -102,6 +102,9 @@ public:
 
     // 处理鼠标点击事件
     bool handleMouseClick(SDL_Event* event);
+
+    //
+    void resetGame();
 
 };
 

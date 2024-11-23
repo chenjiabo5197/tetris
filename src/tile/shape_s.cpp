@@ -7,25 +7,44 @@ extern int g_tile_length;
 
 ShapeS::ShapeS(const tile_sprites& type)
 {
-    for (size_t i = 0; i < 2; i++)
-    {
-        Tile* temp = new Tile(type);
-        temp->setRelativeCoordinate((g_tile_board_middle-1+i)*g_tile_length, g_tile_length);
-        m_tile_vector.push_back(temp);
-    }
-    for (size_t i = 0; i < 2; i++)
-    {
-        Tile* temp = new Tile(type);
-        temp->setRelativeCoordinate((g_tile_board_middle+i)*g_tile_length, 0);
-        m_tile_vector.push_back(temp);
-    }
-    m_current_shape = 0;
+    resetShape(type);
     INFOLOG("ShapeS construct success");
 }
 
 ShapeS::~ShapeS()
 { 
     INFOLOG("ShapeS ~ShapeS success");
+}
+
+void ShapeS::resetShape(const tile_sprites& type, const int& defaultTileX, const int& defaultTileY)
+{ 
+    ShapeBase::resetShape(type, defaultTileX, defaultTileY);
+    for (size_t i = 0; i < 2; i++)
+    {
+        Tile* temp = new Tile(type);
+        if(defaultTileX == -1)
+        {
+            temp->setRelativeCoordinate((g_tile_board_middle-1+i)*g_tile_length, g_tile_length);
+        }
+        else
+        {
+            temp->setAbsoluteCoordinate(defaultTileX+(-1+i)*g_tile_length, defaultTileY + g_tile_length);
+        }
+        m_tile_vector.push_back(temp);
+    }
+    for (size_t i = 0; i < 2; i++)
+    {
+        Tile* temp = new Tile(type);
+        if(defaultTileX == -1)
+        {
+            temp->setRelativeCoordinate((g_tile_board_middle+i)*g_tile_length, 0);
+        }
+        else
+        {
+            temp->setAbsoluteCoordinate(defaultTileX+i*g_tile_length, defaultTileY);
+        }
+        m_tile_vector.push_back(temp);
+    }
 }
 
 std::vector<Tile*> ShapeS::getNextTilesInfo()

@@ -7,19 +7,31 @@ extern int g_tile_length;
 
 ShapeI::ShapeI(const tile_sprites& type)
 {
-    for (size_t i = 0; i < 4; i++)
-    {
-        Tile* temp = new Tile(type);
-        temp->setRelativeCoordinate((g_tile_board_middle-2+i)*g_tile_length, 0);
-        m_tile_vector.push_back(temp);
-    }
-    m_current_shape = 0;
+    resetShape(type);
     INFOLOG("ShapeI construct success||m_current_shape={}", m_current_shape);
 }
 
 ShapeI::~ShapeI()
 { 
     INFOLOG("ShapeI ~ShapeI success");
+}
+
+void ShapeI::resetShape(const tile_sprites& type, const int& defaultTileX, const int& defaultTileY)
+{ 
+    ShapeBase::resetShape(type, defaultTileX, defaultTileY);
+    for (size_t i = 0; i < 4; i++)
+    {
+        Tile* temp = new Tile(type);
+        if (defaultTileX == -1)
+        {
+            temp->setRelativeCoordinate((g_tile_board_middle-2+i)*g_tile_length, 0);
+        }
+        else
+        {
+            temp->setAbsoluteCoordinate(defaultTileX+(-2+i)*g_tile_length, defaultTileY);
+        }
+        m_tile_vector.push_back(temp);
+    }
 }
 
 std::vector<Tile*> ShapeI::getNextTilesInfo()

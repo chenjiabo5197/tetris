@@ -101,3 +101,10 @@ void ShapeBase::updateCurrentShape()
 {
     DEBUGLOG("ShapeBase||updateCurrentShape");
 }
+
+void ShapeBase::resetShape(const tile_sprites& type, const int& defaultTileX, const int& defaultTileY)
+{
+    m_current_shape = 0;
+    m_tile_vector.clear();
+    DEBUGLOG("ShapeBase||resetShape");
+}

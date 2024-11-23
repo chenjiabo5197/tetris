@@ -64,10 +64,10 @@ void TopManage::start()
                 break;
             case START_GAME_EVENT:
                 setRendererType(PLAY_GAME_INTERFACE);
+                m_play_game_manage->resetGame();
                 break;
             case BACK_MANU_EVENT:
                 setRendererType(MAIN_MENU_INTERFACE);
-                m_play_game_manage->init();
                 break;
             default:  // 其他事件，鼠标移动，点击等事件
                 switch (m_render_type)

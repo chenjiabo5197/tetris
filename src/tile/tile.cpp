@@ -79,12 +79,14 @@ void Tile::setRelativeCoordinate(const int& x, const int& y)
 {
     m_box.x = x + m_offset_x;
     m_box.y = y + m_offset_y;
+    DEBUGLOG("setRelativeCoordinate||m_box.x={}||m_box.y={}", m_box.x, m_box.y);
 }
 
 void Tile::setAbsoluteCoordinate(const int& x, const int& y)
 {
     m_box.x = x;
     m_box.y = y;
+    DEBUGLOG("setAbsoluteCoordinate||m_box.x={}||m_box.y={}", m_box.x, m_box.y);
 }
 
 bool Tile::tileDown(const int& rate)

@@ -18,6 +18,7 @@
 #include "logger.h"
 #include "config.h"
 #include "sdl_window.h"
+#include "shape_base.h"
 
 class TileDataBoard
 {
@@ -33,7 +34,10 @@ private:
     SDLTimer* m_top_timer;
 
     // 显示当前获取的分数
-    int gameScore;
+    int m_gameScore;
+
+    ShapeBase* m_next_shape_base;
+    tile_sprites m_tile_type;
 
     // 渲染文字到指定位置
 	void renderText(const std::string& texture_text, TTF_Font* texture_ttf, SDL_Color color, const int& x, const int& y, const float& multiple);
@@ -65,6 +69,9 @@ public:
 
     // 游戏分数增加
     void scoreAdd();
+
+    // 设置下一个图像
+    void setNextShape(ShapeBase* shape, const tile_sprites& tile_type);
 
 };
 

@@ -22,6 +22,8 @@ extern SDL_Rect g_tile_board_region;
 extern int g_tile_board_middle;
 
 ShapeBase* shape_base = nullptr;
+// 下一次出现的图形
+ShapeBase* next_shape_base = nullptr;
 
 PlayGameManage::PlayGameManage(const Config& config)
 {
@@ -79,10 +81,7 @@ void PlayGameManage::init()
     }
     INFOLOG("init||init success");
     g_tile_board_region = m_tile_board->getLeftTopCoordinate();
-    auto rand_tile_sprite = nextTileSprite();
-    shape_base = nextShape(rand_tile_sprite);
-    m_tile_vector.clear();   // 清空当前所有的tile，重新开始新的一局游戏
-    m_data_board->startSingleGame();
+    resetGame();
     // Tile* temp = new Tile(TILE_ORANGE);
     // temp->setRelativeCoordinate(0, 0);
     // m_tile_vector.push_back(temp);
@@ -91,6 +90,17 @@ void PlayGameManage::init()
     // m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
     // TODO 为什么下面的会出core
     // m_tile_vector.insert(m_tile_vector.end(), shape_base->getTilesInfo().begin(), shape_base->getTilesInfo().end());
+}
+
+void PlayGameManage::resetGame()
+{
+    m_tile_vector.clear();   // 清空当前所有的tile，重新开始新的一局游戏
+    m_data_board->startSingleGame();
+    auto rand_tile_sprite = nextTileSprite();
+    shape_base = nextShape(rand_tile_sprite);
+    rand_tile_sprite = nextTileSprite();
+    next_shape_base = nextShape(rand_tile_sprite);
+    m_data_board->setNextShape(next_shape_base, rand_tile_sprite);
 }
 
 void PlayGameManage::startRender()
@@ -128,8 +138,11 @@ void PlayGameManage::startRender()
             }
             
             shape_base = nullptr;
+            next_shape_base->resetShape(nextTileSprite(m_last_tile_sprite_index));
+            shape_base = next_shape_base;
             auto rand_tile_sprite = nextTileSprite();
-            shape_base = nextShape(rand_tile_sprite);
+            next_shape_base = nextShape(rand_tile_sprite);
+            m_data_board->setNextShape(next_shape_base, rand_tile_sprite);
         }
     }
     for (int i = 0; i < m_array_length; i++)
@@ -376,16 +389,23 @@ ShapeBase* PlayGameManage::nextShape(const tile_sprites& type)
 }
 
 
-tile_sprites PlayGameManage::nextTileSprite()
+tile_sprites PlayGameManage::nextTileSprite(int defaultSpriteIndex)
 {
     int rand_index = m_last_tile_sprite_index;
-    do
-    {
-        rand_index = getRandomNum(0, 6);
-        DEBUGLOG("nextTileSprite||rand_index={}", rand_index);
-    } while (rand_index == m_last_tile_sprite_index);
-    m_last_tile_sprite_index = rand_index;
     tile_sprites rand_tile_sprite = TILE_DEFAULT;
+    if(defaultSpriteIndex == -1)
+    {
+        do
+        {
+            rand_index = getRandomNum(0, 6);
+            DEBUGLOG("nextTileSprite||rand_index={}", rand_index);
+        } while (rand_index == m_last_tile_sprite_index);
+        m_last_tile_sprite_index = rand_index;
+    }
+    else
+    {
+        rand_index = defaultSpriteIndex;
+    }
     switch (rand_index)
     {
     case 0:

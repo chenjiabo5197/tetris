@@ -53,7 +53,9 @@ void TileDataBoard::render()
     this->renderText("对局开始(s): ", g_normal_font, color, m_data_board_x+60, m_data_board_y-150, 0.6);  
     this->renderText(time_text.str(), g_normal_font, color,m_data_board_x+50, m_data_board_y-110, 0.6);  //时间信息
     this->renderText("游戏分数: ", g_normal_font, color, m_data_board_x+60, m_data_board_y-70, 0.6);  
-    this->renderText(std::to_string(gameScore), g_normal_font, color,m_data_board_x+50, m_data_board_y-30, 0.6);  //时间信息
+    this->renderText(std::to_string(m_gameScore), g_normal_font, color,m_data_board_x+50, m_data_board_y-30, 0.6);  //分数信息
+    this->renderText("下次图形: ", g_normal_font, color, m_data_board_x+60, m_data_board_y+10, 0.6);  
+    m_next_shape_base->render();
 }
 
 void TileDataBoard::renderText(const std::string& texture_text, TTF_Font* texture_ttf, SDL_Color color, const int& x, const int& y, const float& multiple)
@@ -69,7 +71,7 @@ void TileDataBoard::updateScoreInfo()
 void TileDataBoard::startSingleGame()
 {
     m_top_timer->timerStart();
-    gameScore = 0;
+    m_gameScore = 0;
     INFOLOG("startSingleGame||start timer||type={}");
 }
 
@@ -81,8 +83,14 @@ void TileDataBoard::pauseTimer()
 
 void TileDataBoard::scoreAdd()
 {
-    gameScore++;
+    m_gameScore++;
     INFOLOG("scoreAdd");
 }
 
-
+void TileDataBoard::setNextShape(ShapeBase* shape, const tile_sprites& tile_type)
+{
+    m_next_shape_base = shape;
+    m_tile_type = tile_type;
+    m_next_shape_base->resetShape(m_tile_type, m_data_board_x+50, m_data_board_y+60);
+    INFOLOG("setNextShape");
+}
