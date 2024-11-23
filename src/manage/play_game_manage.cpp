@@ -38,6 +38,7 @@ PlayGameManage::PlayGameManage(const Config& config)
     m_tile_board_row_nums = config.Read("tile_board_height", 0);
     g_tile_board_middle = m_tile_board_col_nums / 2;
     m_tile_board = new TileBoard(config, m_tile_board_col_nums*g_tile_length, m_tile_board_row_nums*g_tile_length);
+    m_data_board = new TileDataBoard(config);
     m_last_shape_index = -1;
     m_last_tile_sprite_index = -1;
     DEBUGLOG("PlayGameManage construct success||button_interval={}||buttons_x={}||buttons_y={}||array_length={}", 
@@ -81,6 +82,7 @@ void PlayGameManage::init()
     auto rand_tile_sprite = nextTileSprite();
     shape_base = nextShape(rand_tile_sprite);
     m_tile_vector.clear();   // 清空当前所有的tile，重新开始新的一局游戏
+    m_data_board->startSingleGame();
     // Tile* temp = new Tile(TILE_ORANGE);
     // temp->setRelativeCoordinate(0, 0);
     // m_tile_vector.push_back(temp);
@@ -93,30 +95,39 @@ void PlayGameManage::init()
 
 void PlayGameManage::startRender()
 {
+    m_data_board->render();
     if (isCanDown(*shape_base))
     {
         shape_base->shapeDown(0.1);
     }
     else
     {
-        // TODO 回收内存
-        // delete shape_base;
-        auto temp_vector = shape_base->getTilesInfo();
-        m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
-        std::set<int> row_set;
-        for (std::vector<Tile*>::iterator it=temp_vector.begin(); it < temp_vector.end(); it++)
+        if(isGameOver(*shape_base))
         {
-            (*it)->updateTileRowCol();
-            row_set.insert((*it)->getTileRow());
+            INFOLOG("game over");
+            m_data_board->pauseTimer();
         }
-        for (auto it = row_set.begin(); it != row_set.end(); it++)
+        else
         {
-            updateEliminate(*it);
+            // TODO 回收内存
+            // delete shape_base;
+            auto temp_vector = shape_base->getTilesInfo();
+            m_tile_vector.insert(m_tile_vector.end(), temp_vector.begin(), temp_vector.end());
+            std::set<int> row_set;
+            for (std::vector<Tile*>::iterator it=temp_vector.begin(); it < temp_vector.end(); it++)
+            {
+                (*it)->updateTileRowCol();
+                row_set.insert((*it)->getTileRow());
+            }
+            for (auto it = row_set.begin(); it != row_set.end(); it++)
+            {
+                updateEliminate(*it);
+            }
+            
+            shape_base = nullptr;
+            auto rand_tile_sprite = nextTileSprite();
+            shape_base = nextShape(rand_tile_sprite);
         }
-        
-        shape_base = nullptr;
-        auto rand_tile_sprite = nextTileSprite();
-        shape_base = nextShape(rand_tile_sprite);
     }
     for (int i = 0; i < m_array_length; i++)
     {
@@ -261,6 +272,21 @@ bool PlayGameManage::isCanRight(const ShapeBase& shape)
         }
     }
     return true;
+}
+
+bool PlayGameManage::isGameOver(const ShapeBase& shape)
+{
+    auto tiles = shape.getTilesInfo();
+    for (auto it = tiles.begin(); it != tiles.end(); it++)
+    {
+        // 判断当前tile是否越过tile_board右侧边界
+        if ((*it)->getBox().y <= g_tile_board_region.y)
+        {
+            INFOLOG("isGameOver||tile_board crown||it.y={}||region.y={}", (*it)->getBox().y, g_tile_board_region.y);
+            return true;
+        }
+    }
+    return false;
 }
 
 bool PlayGameManage::isShapeCanChange(ShapeBase& shape)

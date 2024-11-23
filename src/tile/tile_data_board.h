@@ -57,6 +57,9 @@ public:
     // 开始单人游戏，设置一些数据
     void startSingleGame();
 
+    // 游戏暂停/结束
+    void pauseTimer();
+
 };
 
 
