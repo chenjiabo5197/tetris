@@ -50,6 +50,7 @@ PlayGameManage::~PlayGameManage()
     DEBUGLOG("~PlayGameManage success||release resource");
 }
 
+// TODO init与reset函数拆分
 void PlayGameManage::init()
 {
     for (int i = 0; i < m_array_length; i++)
@@ -79,6 +80,7 @@ void PlayGameManage::init()
     g_tile_board_region = m_tile_board->getLeftTopCoordinate();
     auto rand_tile_sprite = nextTileSprite();
     shape_base = nextShape(rand_tile_sprite);
+    m_tile_vector.clear();   // 清空当前所有的tile，重新开始新的一局游戏
     // Tile* temp = new Tile(TILE_ORANGE);
     // temp->setRelativeCoordinate(0, 0);
     // m_tile_vector.push_back(temp);
