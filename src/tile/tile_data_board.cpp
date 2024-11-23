@@ -52,6 +52,8 @@ void TileDataBoard::render()
     time_text << std::setiosflags(std::ios::fixed) << std::setprecision(1) << (m_top_timer->timerGetTicks() / 1000.f); 
     this->renderText("对局开始(s): ", g_normal_font, color, m_data_board_x+60, m_data_board_y-150, 0.6);  
     this->renderText(time_text.str(), g_normal_font, color,m_data_board_x+50, m_data_board_y-110, 0.6);  //时间信息
+    this->renderText("游戏分数: ", g_normal_font, color, m_data_board_x+60, m_data_board_y-70, 0.6);  
+    this->renderText(std::to_string(gameScore), g_normal_font, color,m_data_board_x+50, m_data_board_y-30, 0.6);  //时间信息
 }
 
 void TileDataBoard::renderText(const std::string& texture_text, TTF_Font* texture_ttf, SDL_Color color, const int& x, const int& y, const float& multiple)
@@ -67,6 +69,7 @@ void TileDataBoard::updateScoreInfo()
 void TileDataBoard::startSingleGame()
 {
     m_top_timer->timerStart();
+    gameScore = 0;
     INFOLOG("startSingleGame||start timer||type={}");
 }
 
@@ -76,5 +79,10 @@ void TileDataBoard::pauseTimer()
     INFOLOG("stopTimer");
 }
 
+void TileDataBoard::scoreAdd()
+{
+    gameScore++;
+    INFOLOG("scoreAdd");
+}
 
 

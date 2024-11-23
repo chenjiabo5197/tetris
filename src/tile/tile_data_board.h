@@ -32,6 +32,9 @@ private:
     // 总计时器，显示当前对局进行的时间
     SDLTimer* m_top_timer;
 
+    // 显示当前获取的分数
+    int gameScore;
+
     // 渲染文字到指定位置
 	void renderText(const std::string& texture_text, TTF_Font* texture_ttf, SDL_Color color, const int& x, const int& y, const float& multiple);
 
@@ -59,6 +62,9 @@ public:
 
     // 游戏暂停/结束
     void pauseTimer();
+
+    // 游戏分数增加
+    void scoreAdd();
 
 };
 

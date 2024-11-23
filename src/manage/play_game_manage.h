@@ -83,7 +83,7 @@ private:
     tile_sprites nextTileSprite();
 
     // 判断tile当前行是否可消除，若可消除则消除，不可消除跳过
-    void updateEliminate(const int& row);
+    bool updateEliminate(const int& row);
 
     // 获取当前shape可以下降的最大距离
     int distanceCanShapeDown(const ShapeBase& shape);

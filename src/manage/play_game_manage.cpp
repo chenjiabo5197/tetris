@@ -121,7 +121,10 @@ void PlayGameManage::startRender()
             }
             for (auto it = row_set.begin(); it != row_set.end(); it++)
             {
-                updateEliminate(*it);
+                if(updateEliminate(*it))
+                {
+                    m_data_board->scoreAdd();
+                }
             }
             
             shape_base = nullptr;
@@ -413,7 +416,7 @@ tile_sprites PlayGameManage::nextTileSprite()
     return rand_tile_sprite;
 }
 
-void PlayGameManage::updateEliminate(const int& row)
+bool PlayGameManage::updateEliminate(const int& row)
 {
     std::set<int> row_set;
     for (std::vector<Tile*>::iterator it=m_tile_vector.begin(); it < m_tile_vector.end(); it++) 
@@ -447,10 +450,12 @@ void PlayGameManage::updateEliminate(const int& row)
                 it++;
             }
         }
+        return true;
     }
     else
     {
         DEBUGLOG("updateEliminate||row={}||row_set.size()={}", row, row_set.size());
+        return false;
     }
 }
 
