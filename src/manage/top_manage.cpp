@@ -69,6 +69,9 @@ void TopManage::start()
             case BACK_MANU_EVENT:
                 setRendererType(MAIN_MENU_INTERFACE);
                 break;
+            case BEST_SCORES_EVENT:
+                m_main_menu_manage->handleEvents(&event);
+                break;
             default:  // 其他事件，鼠标移动，点击等事件
                 switch (m_render_type)
                 {

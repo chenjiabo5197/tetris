@@ -13,6 +13,8 @@
 #include "logger.h"
 #include "config.h"
 #include "global.h"
+#include "my_utils.h"
+#include "sdl_ttf.h"
 
 class MainMenuManage
 {
@@ -33,6 +35,19 @@ private:
 
     // 判断是否在展示排行榜页面
     bool m_is_show_best_score;
+
+    // 排行榜渲染
+    void bestScoreRender();
+
+    // 排行榜界面返回主界面按键
+    SDLButton* backMenuButton;
+
+    std::vector<BestScoreUser> bestScoreVector;
+
+    // 排行榜的渲染字体
+    SDLTTF* m_data_board_ttf;
+
+    void renderText(const std::string& texture_text, TTF_Font* texture_ttf, SDL_Color color, const int& x, const int& y, const float& multiple);
     
 public:
     MainMenuManage(const Config& config);

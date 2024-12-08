@@ -31,8 +31,8 @@ PlayGameManage::PlayGameManage(const Config& config)
     m_button_interval = config.Read("playmanage_buttons_interval", 0);
     m_buttons_x = config.Read("playmanage_buttons_x", 0);
     m_buttons_y = config.Read("playmanage_buttons_y", 0);
-    m_playchess_buttons[0] = new SDLButton(config, "back_menu", m_buttons_x, m_buttons_y);
-    m_array_length = sizeof(m_playchess_buttons) / sizeof(m_playchess_buttons[0]);
+    mPlayButtons[0] = new SDLButton(config, "back_menu", m_buttons_x, m_buttons_y);
+    m_array_length = sizeof(mPlayButtons) / sizeof(mPlayButtons[0]);
     m_tiles_path = config.Read("tiles_resource_path", temp);
     g_tile_resource_length = config.Read("tile_resource_side_length", 0);
     g_tile_length = config.Read("tile_side_length", 0);
@@ -53,17 +53,16 @@ PlayGameManage::~PlayGameManage()
     DEBUGLOG("~PlayGameManage success||release resource");
 }
 
-// TODO init与reset函数拆分
 void PlayGameManage::init()
 {
     for (int i = 0; i < m_array_length; i++)
     {
-        m_playchess_buttons[i]->initButtonCurrentSprite();
+        mPlayButtons[i]->initButtonCurrentSprite();
     }
     DEBUGLOG("init||init variable success");
     for (int i = 0; i < m_array_length; i++)
     {
-        m_playchess_buttons[i]->loadResource(g_main_window->getWindow(), g_main_window->getRenderer());
+        mPlayButtons[i]->loadResource(g_main_window->getWindow(), g_main_window->getRenderer());
     }
     DEBUGLOG("init||load resource success");
     g_tile_texture = new SDLTexture("tiles");
@@ -147,7 +146,7 @@ void PlayGameManage::startRender()
     }
     for (int i = 0; i < m_array_length; i++)
     {
-        m_playchess_buttons[i]->buttonRender(g_main_window->getRenderer());
+        mPlayButtons[i]->buttonRender(g_main_window->getRenderer());
     }
     m_tile_board->render();
     for (std::vector<Tile*>::iterator it=m_tile_vector.begin(); it < m_tile_vector.end(); it++) 
@@ -194,15 +193,15 @@ void PlayGameManage::handleEvents(SDL_Event* event)
     // 遍历渲染当前按键的状态
     for (int i = 0; i < m_array_length; i++)
     {
-        m_playchess_buttons[i]->handleButtonEvent(event);
+        mPlayButtons[i]->handleButtonEvent(event);
     }
     // 检查返回主菜单键状态
-    if (m_playchess_buttons[0]->getButtonCurrentSprite() == BUTTON_SPRITE_MOUSE_UP)
+    if (mPlayButtons[0]->getButtonCurrentSprite() == BUTTON_SPRITE_MOUSE_UP)
     {
         SDL_Event event;
         event.type = BACK_MANU_EVENT;
         SDL_PushEvent(&event);
-        m_playchess_buttons[0]->initButtonCurrentSprite();
+        mPlayButtons[0]->initButtonCurrentSprite();
         INFOLOG("handleEvents||push event=BACK_MANU_EVENT");
     }    
 }

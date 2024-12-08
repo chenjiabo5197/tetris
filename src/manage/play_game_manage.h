@@ -33,7 +33,7 @@ class PlayGameManage
 {
 private:  
     // 当前页面要渲染的按键数组
-    SDLButton* m_playchess_buttons[1];
+    SDLButton* mPlayButtons[1];
 
     TileBoard* m_tile_board;
 

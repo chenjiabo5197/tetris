@@ -41,9 +41,9 @@ bool saveVectorToCsv(std::vector<BestScoreUser>& v)
 	{
 		ofs << it->userName << ",";
 		ofs << it->userScore << ",";
-		ofs << it->curTime << ",";
+		ofs << it->creatTime << ",";
 		ofs << std::endl;
-		DEBUGLOG("saveVectorToCsv||write to {}||name={}||score={}||time={}", BESTSCORESFILE, it->userName, it->userScore, it->curTime);
+		DEBUGLOG("saveVectorToCsv||write to {}||name={}||score={}||time={}", BESTSCORESFILE, it->userName, it->userScore, it->creatTime);
 	}
 	ofs.close();
 	INFOLOG("saveVectorToCsv||best scores save to file success||fileName={}", BESTSCORESFILE);
@@ -67,7 +67,7 @@ std::string getCurTime()
 	char c_TimeStamp[64];
 	memset(c_TimeStamp, 0, sizeof(c_TimeStamp));
 	strftime(c_TimeStamp, sizeof(c_TimeStamp), "%Y-%m-%d %H:%M:%S", p_Time);
-	DEBUGLOG("getCurTime||get curTime success||time={}", c_TimeStamp);
+	DEBUGLOG("getCurTime||get creatTime success||time={}", c_TimeStamp);
 	return c_TimeStamp;
 }
 
@@ -100,9 +100,9 @@ std::vector<BestScoreUser> initBestScores()
 			}
 			tempUser.userName = tempString[0];
 			tempUser.userScore = tempString[1];
-			tempUser.curTime = tempString[2];
-			DEBUGLOG("initBestScores||name={}||score={}||time={}", tempUser.userName, tempUser.userScore, tempUser.curTime);
-			str += "{" + tempUser.userName + ", " + tempUser.userScore + ", " + tempUser.curTime + "}, ";
+			tempUser.creatTime = tempString[2];
+			DEBUGLOG("initBestScores||name={}||score={}||time={}", tempUser.userName, tempUser.userScore, tempUser.creatTime);
+			str += "{" + tempUser.userName + ", " + tempUser.userScore + ", " + tempUser.creatTime + "}, ";
 			tempScore.push_back(tempUser);
 		}
 	}
@@ -131,19 +131,19 @@ void updateBestScore(std::vector<BestScoreUser> & bestScores, const BestScoreUse
 	}
 	bestScores.insert(it, user);
 	if (bestScores.size() > MAXBESTSCORES) {
-		std::string lastItem = bestScores.back().userName + ", " + bestScores.back().userScore + ", " + bestScores.back().curTime;
+		std::string lastItem = bestScores.back().userName + ", " + bestScores.back().userScore + ", " + bestScores.back().creatTime;
 		DEBUGLOG("updateBestScore||bestScore.size() over{}||pop={}", MAXBESTSCORES, lastItem);
 		bestScores.pop_back();
 	}
 	INFOLOG("updateBestScore||updateBestScore success");
 }
 
-BestScoreUser getIBestScoreUser(const std::string& userName, const int& chessNum)
+BestScoreUser getBestScoreByNameAndScore(const std::string& userName, const int& score)
 {
 	BestScoreUser temp;
 	temp.userName = userName;
-	temp.userScore = std::to_string(chessNum);
-	temp.curTime = getCurTime();
+	temp.userScore = std::to_string(score);
+	temp.creatTime = getCurTime();
 	return temp;
 }
 

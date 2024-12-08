@@ -22,7 +22,7 @@ struct BestScoreUser
 {
 	std::string userName;
 	std::string userScore;
-	std::string curTime;
+	std::string creatTime;
 };
 
 
@@ -42,7 +42,7 @@ extern std::vector<BestScoreUser> initBestScores();
 extern void updateBestScore(std::vector<BestScoreUser> & bestScores, const BestScoreUser & user);
 
 // 通过输入姓名组建结构体
-extern BestScoreUser getIBestScoreUser(const std::string& userName, const int& chessNum);
+extern BestScoreUser getBestScoreByNameAndScore(const std::string& userName, const int& score);
 
 // 让程序休眠的秒数
 extern void sleepSeconds(const float& seconds);
